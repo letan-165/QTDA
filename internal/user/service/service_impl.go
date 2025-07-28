@@ -4,7 +4,9 @@ import (
 	"QTDA/internal/auth"
 	"QTDA/internal/user/dto"
 	"QTDA/internal/user/repository"
+	"errors"
 	"fmt"
+	"log"
 
 	"github.com/jinzhu/copier"
 )
@@ -51,7 +53,11 @@ func (s *userServiceImpl) SignUps(request dto.SignUpsRequest) ([]dto.User, error
 			return nil, fmt.Errorf("lỗi copy user: %w", err)
 		}
 
-		hashPass, err := auth.HashPassword(user.Password)
+		hashPass, err2 := auth.HashPassword(user.Password)
+		if err2 != nil {
+			return nil, fmt.Errorf("lỗi HashPassword: %w", err2)
+		}
+
 		user.Password = hashPass
 
 		savedUser, err := s.repo.SaveUser(user)
@@ -91,5 +97,24 @@ func (s *userServiceImpl) SignUps(request dto.SignUpsRequest) ([]dto.User, error
 
 
 func (s *userServiceImpl) Login(request dto.LoginRequest) (string, error) {
-	panic("unimplemented")
+	user, err := s.repo.FindByUsername(request.Username)
+	if err != nil {
+		return "", fmt.Errorf("lỗi khi tìm người dùng '%s': %w", request.Username, err)
+	}
+
+	log.Printf("Người dùng tìm thấy: %+v\n", user)
+
+	if !auth.CheckPasswordHash(request.Password, user.Password) {
+		return "", errors.New("sai tài khoản hoặc mật khẩu")
+	}
+
+	return auth.GenerateJWT(user)
+}
+
+func (s *userServiceImpl) Introspect(token string) (bool, error) {
+	_, err := auth.VerifyJWT(token)
+	if err != nil {
+		return false, err
+	}
+	return true, nil
 }

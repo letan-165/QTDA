@@ -15,6 +15,8 @@ func RegisterUserRouters(r *gin.Engine){
 
 	r.GET("/user/profile/:userID/:role", userHandler.ViewProfileHandler)
 	r.POST("/user/signups", userHandler.SignUpsHandler)
+	r.POST("/user/login", userHandler.LoginHandler)
+	r.POST("/user/introspect", userHandler.IntrospectHandler)
 
 
 

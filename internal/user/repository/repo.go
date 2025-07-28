@@ -7,4 +7,5 @@ type UserRepository interface {
 	SaveStudent(dto.Student) (dto.Student, error)
 	SaveEmployee(dto.Employee) (dto.Employee, error)
 	FindByID(id string) (dto.Student, error)
+	FindByUsername(id string) (dto.User, error)
 }

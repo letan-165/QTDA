@@ -54,3 +54,45 @@ func (h *UserHandler) SignUpsHandler(c *gin.Context) {
 		"data":    users,
 	})
 }
+
+func (h *UserHandler) LoginHandler(c *gin.Context) {
+    var req dto.LoginRequest
+    log.Println("LoginHandler")
+
+    if err := c.ShouldBindJSON(&req); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Dữ liệu không hợp lệ"})
+        return
+    }
+
+    token, err := h.userService.Login(req)
+    if err != nil {
+        log.Println("Lỗi đăng nhập:", err)
+        c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+        return
+    }
+
+    c.JSON(http.StatusOK, gin.H{"token": token})
+}
+
+func (h *UserHandler) IntrospectHandler(c *gin.Context) {
+	// Bước 1: Parse JSON body
+	var req struct {
+		Token string `json:"token"`
+	}
+
+    log.Println("IntrospectHandler")
+	if err := c.ShouldBindJSON(&req); err != nil || req.Token == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Token is required in request body"})
+		return
+	}
+
+	// Bước 2: Gọi service
+	valid, err := h.userService.Introspect(req.Token)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"valid": false, "error": err.Error()})
+		return
+	}
+
+	// Bước 3: Trả kết quả
+	c.JSON(http.StatusOK, gin.H{"valid": valid})
+}

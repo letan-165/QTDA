@@ -8,4 +8,5 @@ type UserService interface {
 	ViewProfile(id string,role string) (any, error)
 	SignUps(request dto.SignUpsRequest) ([]dto.User, error)
 	Login(request dto.LoginRequest) (string, error)
+	Introspect(token string) (bool, error)
 }

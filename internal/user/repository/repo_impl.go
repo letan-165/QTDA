@@ -25,6 +25,12 @@ func (r *UserRepositoryImpl) FindByID(id string) (dto.Student, error) {
 	return student, err
 }
 
+func (r *UserRepositoryImpl) FindByUsername(username string) (dto.User, error) {
+	var user dto.User
+	err := database.DB.Where("username = ?", username).First(&user).Error
+	return user, err
+}
+
 func (r *UserRepositoryImpl) SaveUser(user dto.User) (dto.User, error) {
     if user.UserID == "" {
         user.UserID = uuid.New().String()
