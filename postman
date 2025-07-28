@@ -1,0 +1,130 @@
+{
+	"info": {
+		"_postman_id": "2e2bcd20-b3ed-4e38-b014-f72d2f1d9645",
+		"name": "QTDA",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39278001"
+	},
+	"item": [
+		{
+			"name": "SignUps",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"users\": [\r\n    {\r\n      \"username\": \"tan1\",\r\n      \"password\": \"1\",\r\n      \"name\": \"le tan 1\",\r\n      \"email\": \"tuan@example.com\",\r\n      \"role\": \"STUDENT\",\r\n      \"className\": \"12A\",\r\n      \"major\": \"IT\"\r\n    },\r\n    {\r\n      \"username\": \"tan2\",\r\n      \"password\": \"2\",\r\n      \"name\": \"tan le 2\",\r\n      \"email\": \"thu@example.com\",\r\n      \"role\": \"EMPLOYEE\",\r\n      \"department\": \"HR\"\r\n    }\r\n  ]\r\n}\r\n"
+				},
+				"url": {
+					"raw": "{{user}}/user/signups",
+					"host": [
+						"{{user}}"
+					],
+					"path": [
+						"user",
+						"signups"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"tan2\",\r\n    \"password\": \"2\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{user}}/user/login",
+					"host": [
+						"{{user}}"
+					],
+					"path": [
+						"user",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Introspect",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTM2OTAwNDQsImlkIjoiNDNjNDkzYmItMTcxNy00YjQ1LTkzMTEtZDNmMmE5OTA0YzczIiwic2NvcGUiOiJFTVBMT1lFRSIsInN1YiI6IjBiYzE5YWYxLTI1MDAtNDExNi1iNWQ3LWJiNTQwMWViZTliYiJ9.xxDaHCNJz2WCj6b4IGHUh5E3sCucai5jD1M7gbrzhe4\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{user}}/user/introspect",
+					"host": [
+						"{{user}}"
+					],
+					"path": [
+						"user",
+						"introspect"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ping",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"users\": [\r\n    {\r\n      \"username\": \"tuan123\",\r\n      \"password\": \"123456\",\r\n      \"name\": \"Nguyen Van Tuan\",\r\n      \"email\": \"tuan@example.com\",\r\n      \"role\": \"STUDENT\",\r\n      \"class_name\": \"12A\",\r\n      \"major\": \"IT\"\r\n    },\r\n    {\r\n      \"username\": \"thu123\",\r\n      \"password\": \"123456\",\r\n      \"name\": \"Le Thi Thu\",\r\n      \"email\": \"thu@example.com\",\r\n      \"role\": \"EMPLOYEE\",\r\n      \"position\": \"HR\"\r\n    }\r\n  ]\r\n}\r\n"
+				},
+				"url": {
+					"raw": "{{user}}/ping",
+					"host": [
+						"{{user}}"
+					],
+					"path": [
+						"ping"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "profile",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{user}}/user/profile/b3cbb710-a7c4-4a12-a230-f9ac0d82118c/StudentAffairs",
+					"host": [
+						"{{user}}"
+					],
+					"path": [
+						"user",
+						"profile",
+						"b3cbb710-a7c4-4a12-a230-f9ac0d82118c",
+						"StudentAffairs"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
