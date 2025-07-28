@@ -24,7 +24,7 @@ export function ResetPasswordForm({
           </div>
           <CardTitle className="text-2xl">Đặt lại mật khẩu</CardTitle>
           <CardDescription>
-            Đặt lại mật khẩu mới cho tài khoản của bạn
+            Đặt lại mật khẩu mới cho tài khoản của bạn nhe
           </CardDescription>
         </CardHeader>
         <CardContent>
