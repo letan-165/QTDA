@@ -22,8 +22,9 @@ func NewUserHandler(userService service.UserService) *UserHandler {
 
 func (h *UserHandler) ViewProfileHandler(c *gin.Context) {
 	id := c.Param("userID")
+	role := c.Param("role")
 
-	student, err := h.userService.ViewProfile(id)
+	student, err := h.userService.ViewProfile(id, role )
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
 			"error": "Không tìm thấy người dùng",

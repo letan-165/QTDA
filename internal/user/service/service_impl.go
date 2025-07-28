@@ -1,6 +1,7 @@
 package service
 
 import (
+	"QTDA/internal/auth"
 	"QTDA/internal/user/dto"
 	"QTDA/internal/user/repository"
 	"fmt"
@@ -8,9 +9,11 @@ import (
 	"github.com/jinzhu/copier"
 )
 
+
 type userServiceImpl struct {
 	repo repository.UserRepository
 }
+
 
 func NewUserService() UserService {
 	return &userServiceImpl{
@@ -18,12 +21,25 @@ func NewUserService() UserService {
 	}
 }
 
-func (s *userServiceImpl) ViewProfile(id string) (dto.Student, error) {
-	return s.repo.FindByID(id)
-}
+func (s *userServiceImpl) ViewProfile(id string, role string) (any, error) {
+	student, err := s.repo.FindByID(id)
+	switch role {
+	case "STUDENT":
+		var response dto.ProfileStudentResponse
+		copier.Copy(&response, &student)
+		copier.Copy(&response, &student.User)
+		return response, err
+	case "StudentAffairs":
+		var response dto.DetailInfoStudentResponse
+		copier.Copy(&response, &student)
+		copier.Copy(&response.Profile, &student.User)
+		return response, err
+	case "MENTOR":
+		return nil, fmt.Errorf("chưa làm")
 
-func (s *userServiceImpl) EditProfile(request dto.Student) (dto.Student, error) {
-	return s.repo.SaveStudent(request)
+	default:
+		return nil, fmt.Errorf("Role không hợp lệ")
+	}
 }
 
 func (s *userServiceImpl) SignUps(request dto.SignUpsRequest) ([]dto.User, error) {
@@ -34,6 +50,9 @@ func (s *userServiceImpl) SignUps(request dto.SignUpsRequest) ([]dto.User, error
 		if err := copier.Copy(&user, &r); err != nil {
 			return nil, fmt.Errorf("lỗi copy user: %w", err)
 		}
+
+		hashPass, err := auth.HashPassword(user.Password)
+		user.Password = hashPass
 
 		savedUser, err := s.repo.SaveUser(user)
 		userID := savedUser.UserID
@@ -61,7 +80,7 @@ func (s *userServiceImpl) SignUps(request dto.SignUpsRequest) ([]dto.User, error
 			if err != nil {
 				return nil, fmt.Errorf("lỗi SaveEmployee: %w", err)
 			}
-		} 
+		}
 
 		users = append(users, savedUser)
 	}
@@ -70,3 +89,7 @@ func (s *userServiceImpl) SignUps(request dto.SignUpsRequest) ([]dto.User, error
 }
 
 
+
+func (s *userServiceImpl) Login(request dto.LoginRequest) (string, error) {
+	panic("unimplemented")
+}

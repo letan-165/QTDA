@@ -5,7 +5,7 @@ import (
 )
 
 type UserService interface {
-	ViewProfile(id string) (dto.Student, error)
-	EditProfile(request dto.Student) (dto.Student, error)
+	ViewProfile(id string,role string) (any, error)
 	SignUps(request dto.SignUpsRequest) ([]dto.User, error)
+	Login(request dto.LoginRequest) (string, error)
 }

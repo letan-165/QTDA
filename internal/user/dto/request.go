@@ -15,3 +15,8 @@ type UserSaveRequest struct {
 type SignUpsRequest struct {
 	Users []UserSaveRequest
 }
+
+type LoginRequest struct {
+	Username string
+	Password string
+}
