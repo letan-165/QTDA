@@ -18,7 +18,7 @@ export function ForgotPasswordForm({
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
-        <CardHeader className="text-center">
+        <CardHeader >
           <CardTitle className="text-2xl">Quên mật khẩu</CardTitle>
           <CardDescription>
             Nhập email để nhận mã xác nhận
