@@ -1,0 +1,17 @@
+package com.app.qtda.internal.user.dto.util;
+
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.FieldDefaults;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class StudentSave {
+    String dateOfBirth;
+    String gender;
+    String className;
+}
