@@ -1,3 +1,3 @@
-# QLDA
+# QTDA
 
-## run app : "air"
+## run app : "mvn spring-boot:run"
