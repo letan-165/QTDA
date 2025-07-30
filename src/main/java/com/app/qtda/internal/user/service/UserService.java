@@ -12,6 +12,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ public class UserService {
     StaffRepository staffRepository;
     StudentRepository studentRepository;
     UserMapper userMapper;
+    PasswordEncoder passwordEncoder;
 
     public List<UserResponse> findAll(){
         var accounts = accountRepository.findAll();
@@ -34,44 +36,55 @@ public class UserService {
             if(account.getRole().equals("STUDENT")){
                 Student student = studentRepository.findByAccount_UserID(account.getUserID().toString())
                         .orElseThrow(()->new RuntimeException("Khong tìm thấy student"));
-                userResponse.setStudent(student);
+                userResponse.setStudent(userMapper.toStudentResponse(student));
             }
             if(account.getRole().equals("STAFF")){
                 Staff staff = staffRepository.findByAccount_UserID(account.getUserID().toString())
                         .orElseThrow(()->new RuntimeException("Khong tìm thấy staff"));
-                userResponse.setStaff(staff);
+                userResponse.setStaff(userMapper.toStaffResponse(staff));
             }
 
             return userResponse;
         }).toList();
     }
 
-    public List<UserResponse> saveAll(List<UserSaveRequest> requests){
-        var listStaffs = requests.stream()
-                .filter(request-> request.getRole().equals("STAFF"))
-                .map(request->{
-                    var staff = userMapper.toStaff(request);
-                    staff.setAccount(userMapper.toAccount(request));
-                    staff.setPosition(request.getStaff().getPosition());
-                    return staff;}).toList();
+    public List<UserResponse> signUps(List<UserSaveRequest> requests) {
+        List<Staff> listStaffs = new ArrayList<>();
+        List<Student> listStudents = new ArrayList<>();
+        List<UserResponse> responses = new ArrayList<>();
 
-        var listStudents = requests.stream()
-                .filter(request-> request.getRole().equals("STUDENT"))
-                .map(request->{
-                    var student = userMapper.toStudent(request);
-                    student.setAccount(userMapper.toAccount(request));
-                    student.setDateOfBirth(request.getStudent().getDateOfBirth());
-                    student.setGender(request.getStudent().getGender());
-                    student.setClassName(request.getStudent().getClassName());
-                    return student;}).toList();
-        List<UserResponse> response = new ArrayList<>();
+        for (UserSaveRequest request : requests) {
+            var account = userMapper.toAccount(request);
+            account.setPassword(passwordEncoder.encode(account.getPassword()));
+
+            if ("STAFF".equalsIgnoreCase(request.getRole())) {
+                var staff = userMapper.toStaff(request);
+                staff.setAccount(account);
+                staff.setPosition(request.getStaff().getPosition());
+                listStaffs.add(staff);
+            }
+
+            if ("STUDENT".equalsIgnoreCase(request.getRole())) {
+                var student = userMapper.toStudent(request);
+                student.setAccount(account);
+                student.setDateOfBirth(request.getStudent().getDateOfBirth());
+                student.setGender(request.getStudent().getGender());
+                student.setClassName(request.getStudent().getClassName());
+                listStudents.add(student);
+            }
+        }
+
         staffRepository.saveAll(listStaffs)
-                .forEach(staff -> response.add(UserResponse.builder().staff(staff).build()));
+                .forEach(staff -> responses.add(UserResponse.builder()
+                        .staff(userMapper.toStaffResponse(staff))
+                        .build()));
+
         studentRepository.saveAll(listStudents)
-                .forEach(student -> response.add(UserResponse.builder().student(student).build()));
+                .forEach(student -> responses.add(UserResponse.builder()
+                        .student(userMapper.toStudentResponse(student))
+                        .build()));
 
-
-        return response;
+        return responses;
     }
 
 

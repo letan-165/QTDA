@@ -18,6 +18,6 @@ public class UserResponse {
     String userID;
     String username;
     String role;
-    Staff staff;
-    Student student;
+    StaffResponse staff;
+    StudentResponse student;
 }

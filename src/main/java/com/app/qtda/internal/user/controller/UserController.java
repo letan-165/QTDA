@@ -30,7 +30,7 @@ public class UserController {
     @PostMapping("/signups")
     ApiResponse<List<UserResponse>>signUps(@RequestBody ListUserSaveRequest request){
         return ApiResponse.<List<UserResponse>>builder()
-                .result(userService.saveAll(request.getUsers()))
+                .result(userService.signUps(request.getUsers()))
                 .build();
     }
 
