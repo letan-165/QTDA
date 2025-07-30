@@ -2,6 +2,7 @@ package com.app.qtda.internal.user.controller;
 
 import com.app.qtda.common.ApiResponse;
 import com.app.qtda.internal.user.dto.request.ListUserSaveRequest;
+import com.app.qtda.internal.user.dto.request.UserDeleteRequest;
 import com.app.qtda.internal.user.dto.response.UserResponse;
 import com.app.qtda.internal.user.service.UserService;
 import lombok.AccessLevel;
@@ -31,6 +32,13 @@ public class UserController {
     ApiResponse<List<UserResponse>>signUps(@RequestBody ListUserSaveRequest request){
         return ApiResponse.<List<UserResponse>>builder()
                 .result(userService.signUps(request.getUsers()))
+                .build();
+    }
+
+    @DeleteMapping
+    ApiResponse<List<String>>delete(@RequestBody UserDeleteRequest request){
+        return ApiResponse.<List<String>>builder()
+                .result(userService.delete(request.getUserIDs()))
                 .build();
     }
 

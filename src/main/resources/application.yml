@@ -13,4 +13,5 @@ spring:
       ddl-auto: update
 
 key:
-  value: XAYDUNGHTTTHTSINHVIENTRUONGTPD
+  value: ${KEY_JWT:XDHTTTQLHTSVTPD2025@TPD#SystemKey!}
+

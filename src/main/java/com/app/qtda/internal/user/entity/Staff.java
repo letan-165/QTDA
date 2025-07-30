@@ -28,7 +28,7 @@ public class Staff extends InfoUserUtil {
 
     String position;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "userID", unique = true)
     Account account;
 }

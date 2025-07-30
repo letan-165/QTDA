@@ -31,7 +31,7 @@ public class Student extends InfoUserUtil {
     String gender;
     String className;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "userID", unique = true)
     Account account;
 }
