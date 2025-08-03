@@ -20,7 +20,7 @@ import java.text.ParseException;
 public class AuthController {
      AuthService authService;
 
-     @PostMapping("/login")
+     @PostMapping("/public/login")
      public ApiResponse<String> login(@RequestBody LoginRequest request){
         return ApiResponse.<String>builder()
                 .result(authService.login(request))

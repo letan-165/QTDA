@@ -21,21 +21,21 @@ import java.util.List;
 public class UserController {
     UserService userService;
 
-    @GetMapping
+    @GetMapping("/public/gets")
     ApiResponse<List<UserResponse>> findAll(){
         return ApiResponse.<List<UserResponse>>builder()
                 .result(userService.findAll())
                 .build();
     }
 
-    @PostMapping("/signups")
+    @PostMapping("/public/signups")
     ApiResponse<List<UserResponse>>signUps(@RequestBody ListUserSaveRequest request){
         return ApiResponse.<List<UserResponse>>builder()
                 .result(userService.signUps(request.getUsers()))
                 .build();
     }
 
-    @DeleteMapping
+    @DeleteMapping("/public/removes")
     ApiResponse<List<String>>delete(@RequestBody UserDeleteRequest request){
         return ApiResponse.<List<String>>builder()
                 .result(userService.delete(request.getUserIDs()))
