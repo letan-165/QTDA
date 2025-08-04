@@ -23,7 +23,7 @@ export async function loginApi(username: string, password: string): Promise<stri
 // lib/api.ts
 
 export async function fetchAllUsers() {
-  const res = await fetch("http://localhost:8080/api/user", {
+  const res = await fetch("http://localhost:8080/api/user/public/gets", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -48,6 +48,9 @@ export type UserResponse = {
 }
 
 export type NewUser = {
+  fullName: string
+  email: string
+  phone: string
   userID: string
   username: string
   password: string
@@ -55,11 +58,34 @@ export type NewUser = {
   staff?: {
     position: string
   }
+  student?: {
+    dateOfBirth: string
+    gender: string
+    classname: string
+  }
+}
+
+export type UserDetail = {
+  userID: string
+  username: string
+  fullName: string
+  email: string
+  phone: string
+  role: string
+  staff?: {
+    position: string
+  }
+  student?: {
+    dateOfBirth: string
+    gender: string
+    classname: string
+  }
 }
 
 
+
 export async function signUpUsers(users: NewUser[]) {
-  const res = await fetch("http://localhost:8080/api/user/signups", {
+  const res = await fetch("http://localhost:8080/api/user/public/saves", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -78,7 +104,7 @@ export async function signUpUsers(users: NewUser[]) {
 
 
 export async function deleteUsers(userIDs: string[]) {
-  const res = await fetch("http://localhost:8080/api/user", {
+  const res = await fetch("http://localhost:8080/api/user/public/removes", {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
@@ -94,4 +120,18 @@ export async function deleteUsers(userIDs: string[]) {
   const data = await res.json()
   return data.result // Trả về danh sách ID đã xoá
 }
+export async function fetchUserDetail(userID: string): Promise<UserDetail> {
+  const res = await fetch(`http://localhost:8080/api/user/public/get/${userID}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
 
+  if (!res.ok) {
+    throw new Error("Không thể tải thông tin người dùng")
+  }
+
+  const data = await res.json()
+  return data.result // Trả về chi tiết người dùng
+}
