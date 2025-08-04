@@ -3,6 +3,8 @@ package com.app.qtda.internal.post.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -19,10 +21,10 @@ public class Scholarship {
     Long scholarshipID;
     Instant deadline;
 
-    @OneToOne(optional = true, fetch = FetchType.EAGER)
+    @OneToOne(optional = true, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "notificationID", nullable = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     Notification notification;
-
 
     @Column(precision = 19, scale = 0)
     BigDecimal amount;

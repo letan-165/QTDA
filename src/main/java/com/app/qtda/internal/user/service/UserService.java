@@ -1,5 +1,6 @@
 package com.app.qtda.internal.user.service;
 
+import com.app.qtda.common.enums.AccountRole;
 import com.app.qtda.common.exception.AppException;
 import com.app.qtda.common.exception.ErrorCode;
 import com.app.qtda.internal.auth.repository.AccountRepository;
@@ -51,7 +52,7 @@ public class UserService {
         }).toList();
     }
 
-    public List<UserResponse> signUps(List<UserSaveRequest> requests) {
+    public List<UserResponse> save(List<UserSaveRequest> requests) {
         List<Staff> listStaffs = new ArrayList<>();
         List<Student> listStudents = new ArrayList<>();
         List<UserResponse> responses = new ArrayList<>();
@@ -60,26 +61,30 @@ public class UserService {
             var account = userMapper.toAccount(request);
             account.setPassword(passwordEncoder.encode(account.getPassword()));
 
-            if ("STAFF".equalsIgnoreCase(request.getRole())) {
-                var staffID = staffRepository.findByAccount_UserID(request.getUserID())
-                        .orElse(new Staff()).getStaffID();
-
-                var staff = userMapper.toStaff(request);
-                userMapper.updateStaffFromDto(request.getStaff(), staff);
-                staff.setAccount(account);
-                staff.setStaffID(staffID);
-                listStaffs.add(staff);
-            }
-
-            if ("STUDENT".equalsIgnoreCase(request.getRole())){
-                var studentID = studentRepository.findByAccount_UserID(request.getUserID())
-                        .orElse(new Student()).getStudentID();
-
-                var student = userMapper.toStudent(request);
-                userMapper.updateStudentFromDto(request.getStudent(),student);
-                student.setAccount(account);
-                student.setStudentID(studentID);
-                listStudents.add(student);
+            switch (request.getRole()) {
+                case STAFF: {
+                    var staffID = staffRepository.findByAccount_UserID(request.getUserID())
+                            .orElse(new Staff()).getStaffID();
+                    var staff = userMapper.toStaff(request);
+                    userMapper.updateStaffFromDto(request.getStaff(), staff);
+                    staff.setAccount(account);
+                    staff.setStaffID(staffID);
+                    listStaffs.add(staff);
+                    break;
+                }
+                case STUDENT:{
+                    var studentID = studentRepository.findByAccount_UserID(request.getUserID())
+                            .orElse(new Student()).getStudentID();
+                    var student = userMapper.toStudent(request);
+                    userMapper.updateStudentFromDto(request.getStudent(),student);
+                    student.setAccount(account);
+                    student.setStudentID(studentID);
+                    listStudents.add(student);
+                    break;
+                }
+                default: {
+                    throw new AppException(ErrorCode.ROLE_INVALID);
+                }
             }
         }
 

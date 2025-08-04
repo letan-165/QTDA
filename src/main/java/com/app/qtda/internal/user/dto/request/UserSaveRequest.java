@@ -1,5 +1,6 @@
 package com.app.qtda.internal.user.dto.request;
 
+import com.app.qtda.common.enums.AccountRole;
 import com.app.qtda.common.util.InfoUserUtil;
 import com.app.qtda.internal.user.dto.util.StaffSave;
 import com.app.qtda.internal.user.dto.util.StudentSave;
@@ -17,7 +18,7 @@ public class UserSaveRequest extends InfoUserUtil {
     String username;
 
     String password;
-    String role;
+    AccountRole role;
     StaffSave staff;
     StudentSave student;
 }
