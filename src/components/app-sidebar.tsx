@@ -24,11 +24,7 @@ const items = [
     url: "/dashboard/admin/accounts",
     icon: UserCog,
   },
-  {
-    title: "Quản lý người dùng",
-    url: "/dashboard/admin/users",
-    icon: Users,
-  },
+
   {
     title: "Quản lý sự kiện",
     url: "/dashboard/admin/events",

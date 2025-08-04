@@ -34,7 +34,18 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu"
 
-export  function AccountPage() {
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination"
+import { Skeleton } from "./ui/skeleton"
+
+export function AccountPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [filterRole, setFilterRole] = useState("All")
   const [users, setUsers] = useState<UserResponse[]>([])
@@ -42,6 +53,8 @@ export  function AccountPage() {
   const [error, setError] = useState("")
   const [selectedUser, setSelectedUser] = useState<UserDetail | null>(null)
   const [showDetailDialog, setShowDetailDialog] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
+  const usersPerPage = 4
 
   const [newUser, setNewUser] = useState<NewUser>({
     userID: "",
@@ -68,6 +81,7 @@ export  function AccountPage() {
       setLoading(true)
       const data = await fetchAllUsers()
       setUsers(data)
+      setCurrentPage(1) // Reset to first page when loading new data
     } catch (err: any) {
       setError(err.message)
       toast.error("Lỗi tải dữ liệu người dùng.")
@@ -111,13 +125,18 @@ export  function AccountPage() {
     try {
       await deleteUsers([id])
       setUsers(users.filter((u) => u.userID !== id))
+      // Adjust current page if necessary
+      const totalPages = Math.ceil(filteredUsers.length / usersPerPage)
+      if (currentPage > totalPages) {
+        setCurrentPage(totalPages)
+      }
       toast.success(`Đã xoá người dùng có ID: ${id}`)
     } catch (err: any) {
       toast.error(err.message || "Xoá người dùng thất bại.")
     }
   }
 
-    const handleViewDetail = async (userID: string) => {
+  const handleViewDetail = async (userID: string) => {
     try {
       const detail = await fetchUserDetail(userID)
       setSelectedUser(detail)
@@ -136,6 +155,18 @@ export  function AccountPage() {
 
     return matchesSearch && matchesRole
   })
+
+  // Pagination calculations
+  const totalPages = Math.ceil(filteredUsers.length / usersPerPage)
+  const startIndex = (currentPage - 1) * usersPerPage
+  const endIndex = startIndex + usersPerPage
+  const paginatedUsers = filteredUsers.slice(startIndex, endIndex)
+
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= totalPages) {
+      setCurrentPage(page)
+    }
+  }
 
   return (
     <div className="p-6 w-full min-w-[80vw] mx-auto">
@@ -227,37 +258,60 @@ export  function AccountPage() {
       </div>
 
       {loading ? (
-        <p>Đang tải...</p>
+        <div className="w-full border mb-8">
+          <table className="w-full">
+            <thead>
+              <tr className="bg-gray-100 text-left">
+                <th className="border px-4 py-2">User ID</th>
+                <th className="border px-4 py-2">Username</th>
+                <th className="border px-4 py-2">Role</th>
+                <th className="border px-4 py-2">Position</th>
+                <th className="border px-4 py-2">Hành động</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[...Array(4)].map((_, index) => (
+                <tr key={index}>
+                  <td className="border px-4 py-2"><Skeleton className="h-[20px] w-[100px] rounded-full" /></td>
+                  <td className="border px-4 py-2"><Skeleton className="h-[20px] w-[150px] rounded-full" /></td>
+                  <td className="border px-4 py-2"><Skeleton className="h-[20px] w-[80px] rounded-full" /></td>
+                  <td className="border px-4 py-2"><Skeleton className="h-[20px] w-[120px] rounded-full" /></td>
+                  <td className="border px-4 py-2"><Skeleton className="h-[20px] w-[60px] rounded-full" /></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       ) : (
-   <table className="w-full border mb-8">
-        <thead>
-          <tr className="bg-gray-100 text-left">
-            <th className="border px-4 py-2">User ID</th>
-            <th className="border px-4 py-2">Username</th>
-            <th className="border px-4 py-2">Role</th>
-            <th className="border px-4 py-2">Position</th>
-            <th className="border px-4 py-2">Hành động</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredUsers.map((user) => (
-            <tr key={user.userID}>
-              <td className="border px-4 py-2">{user.userID}</td>
-              <td className="border px-4 py-2">{user.username}</td>
-              <td className="border px-4 py-2">{user.role}</td>
-              <td className="border px-4 py-2">{user.staff?.position || "-"}</td>
-              <td className="border px-4 py-2 flex gap-2">
-                <button onClick={() => handleViewDetail(user.userID)}>
-                  <ViewIcon className="w-4 h-4 text-blue-500" />
-                </button>
-                <button onClick={() => handleDelete(user.userID)}>
-                  <DeleteIcon className="w-4 h-4 text-red-500" />
-                </button>
-              </td>
+        <table className="w-full border mb-8">
+          <thead>
+            <tr className="bg-gray-100 text-left">
+              <th className="border px-4 py-2">User ID</th>
+              <th className="border px-4 py-2">Username</th>
+              <th className="border px-4 py-2">Role</th>
+              <th className="border px-4 py-2">Position</th>
+              <th className="border px-4 py-2">Hành động</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {paginatedUsers.map((user) => (
+              <tr key={user.userID}>
+                <td className="border px-4 py-2">{user.userID}</td>
+                <td className="border px-4 py-2">{user.username}</td>
+                <td className="border px-4 py-2">{user.role}</td>
+                <td className="border px-4 py-2">{user.staff?.position || "-"}</td>
+                <td className="border px-4 py-2 flex gap-2">
+                  <button onClick={() => handleViewDetail(user.userID)}>
+                    <ViewIcon className="w-4 h-4 text-blue-500" />
+                  </button>
+                  <button onClick={() => handleDelete(user.userID)}>
+                    <DeleteIcon className="w-4 h-4 text-red-500" />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
 
       <Dialog open={showDetailDialog} onOpenChange={setShowDetailDialog}>
@@ -291,6 +345,40 @@ export  function AccountPage() {
           )}
         </DialogContent>
       </Dialog>
+
+      <Pagination>
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious 
+              href="#" 
+              onClick={() => handlePageChange(currentPage - 1)}
+              className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+            />
+          </PaginationItem>
+          {[...Array(totalPages)].map((_, index) => {
+            const page = index + 1
+            return (
+              <PaginationItem key={page}>
+                <PaginationLink 
+                  href="#"
+                  onClick={() => handlePageChange(page)}
+                  isActive={currentPage === page}
+                >
+                  {page}
+                </PaginationLink>
+              </PaginationItem>
+            )
+          })}
+          {totalPages > 5 && <PaginationItem><PaginationEllipsis /></PaginationItem>}
+          <PaginationItem>
+            <PaginationNext 
+              href="#" 
+              onClick={() => handlePageChange(currentPage + 1)}
+              className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+            />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
     </div>
   )
 }
