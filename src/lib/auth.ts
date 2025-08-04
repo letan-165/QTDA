@@ -1,21 +1,31 @@
-import { jwtDecode } from 'jwt-decode';
+import { jwtDecode } from "jwt-decode"
 
-export type UserRole = "ADMIN" | "STUDENT" | "STUDENT_AFFAIRS" | "MENTOR";
-
-interface JwtPayload {
-  role: UserRole;
-  [key: string]: any;
+type DecodedToken = {
+  sub: string
+  id: string
+  scope: "ADMIN" | "STUDENT" | "STAFF"
+  exp: number
 }
 
-export async function getUserRole(): Promise<UserRole> {
-  const token = localStorage.getItem("token");
-  if (!token) throw new Error("No token found");
+export function handleLogin(token: string) {
+  const decoded: DecodedToken = jwtDecode(token)
+  const role = decoded.scope
 
-  try {
-    const decoded = jwtDecode<JwtPayload>(token);
-    if (!decoded.role) throw new Error("Role not found in token");
-    return decoded.role;
-  } catch (err) {
-    throw new Error("Invalid token or decoding error");
+  localStorage.setItem("token", token)
+  localStorage.setItem("role", role)
+  localStorage.setItem("userId", decoded.sub)
+
+  switch (role) {
+    case "ADMIN":
+      window.location.href = "/dashboard/admin/accounts"
+      break
+    case "STUDENT":
+      window.location.href = "/dashboard/student"
+      break
+    case "STAFF":
+      window.location.href = "/dashboard/staff"
+      break
+    default:
+      window.location.href = "/dashboard"
   }
 }

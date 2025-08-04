@@ -1,51 +1,97 @@
-// lib/api.ts
-export async function login(username: string, password: string) {
-  const res = await fetch("http://localhost:8080/user/login", {
+
+export async function loginApi(username: string, password: string): Promise<string> {
+  const res = await fetch("http://localhost:8080/api/auth/login", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username, password }),
-  });
+  })
 
   if (!res.ok) {
-    throw new Error("Login failed");
+    const errData = await res.json()
+    throw new Error(errData.error || "Đăng nhập thất bại")
   }
 
-  return res.json();
+  const data = await res.json()
+
+  const token = data.result
+  if (!token || typeof token !== "string") {
+    throw new Error("Token không hợp lệ hoặc không tồn tại")
+  }
+
+  return token
 }
-export async function forgotPassword(email: string) {
-  const res = await fetch("http://localhost:8080/user/forgot-password", {
+// lib/api.ts
+
+export async function fetchAllUsers() {
+  const res = await fetch("http://localhost:8080/api/user", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+
+  if (!res.ok) {
+    throw new Error("Không thể tải danh sách người dùng")
+  }
+
+  const data = await res.json()
+  return data.result // Trả về danh sách UserResponse
+}
+
+export type UserResponse = {
+  userID: string
+  username: string
+  role: string
+  staff?: {
+    position: string
+  }
+}
+
+export type NewUser = {
+  userID: string
+  username: string
+  password: string
+  role: string
+  staff?: {
+    position: string
+  }
+}
+
+
+export async function signUpUsers(users: NewUser[]) {
+  const res = await fetch("http://localhost:8080/api/user/signups", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ email }),
-  });
+    body: JSON.stringify({ users }), 
+  })
 
   if (!res.ok) {
-    throw new Error("Forgot password request failed");
+    const err = await res.json()
+    throw new Error(err.error || "Đăng ký người dùng thất bại")
   }
 
-  return res.json();
+  const data = await res.json()
+  return data.result 
 }
-export async function resetPasswordWithCode(
-  code: string,
-  newPassword: string,
-  confirmPassword: string
-) {
-  const res = await fetch("http://localhost:8080/user/reset-password", {
-    method: "POST",
+
+
+export async function deleteUsers(userIDs: string[]) {
+  const res = await fetch("http://localhost:8080/api/user", {
+    method: "DELETE",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ code, newPassword, confirmPassword }),
-  });
+    body: JSON.stringify({ userIDs }), 
+  })
 
   if (!res.ok) {
-    throw new Error("Reset password failed");
+    const err = await res.json()
+    throw new Error(err.error || "Xoá người dùng thất bại")
   }
 
-  return res.json();
+  const data = await res.json()
+  return data.result // Trả về danh sách ID đã xoá
 }
 
