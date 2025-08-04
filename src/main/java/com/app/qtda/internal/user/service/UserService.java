@@ -3,6 +3,7 @@ package com.app.qtda.internal.user.service;
 import com.app.qtda.common.enums.AccountRole;
 import com.app.qtda.common.exception.AppException;
 import com.app.qtda.common.exception.ErrorCode;
+import com.app.qtda.internal.auth.entity.Account;
 import com.app.qtda.internal.auth.repository.AccountRepository;
 import com.app.qtda.internal.user.dto.request.UserSaveRequest;
 import com.app.qtda.internal.user.dto.response.UserResponse;
@@ -112,6 +113,13 @@ public class UserService {
                 staffs.stream().map(staff -> staff.getAccount().getUserID()),
                 students.stream().map(student -> student.getAccount().getUserID()))
                 .toList();
+    }
+
+    public UserResponse getUser(String userID){
+        Account account = accountRepository.findById(userID)
+                .orElseThrow(()->new AppException(ErrorCode.ACCOUNT_NO_EXISTS));
+
+        return userMapper.toUserResponse(account);
     }
 
 }
