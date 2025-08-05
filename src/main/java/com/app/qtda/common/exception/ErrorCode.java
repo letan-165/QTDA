@@ -8,12 +8,15 @@ import org.springframework.http.HttpStatusCode;
 @Getter
 @AllArgsConstructor
 public enum ErrorCode {
-    SUPPORT_TYPE_NO_EXISTS(1018,"Support type not exists", HttpStatus.BAD_REQUEST),
-    ENUM_INVALID(1017,"Enum invalid", HttpStatus.BAD_REQUEST),
-    TYPE_UPDATE_INVALID(1016,"Not allowed to change type", HttpStatus.BAD_REQUEST),
-    NOTIFICATION_NO_EXISTS(1015,"Notification not exists", HttpStatus.BAD_REQUEST),
-    EVENT_NO_EXISTS(1014,"Event not exists", HttpStatus.BAD_REQUEST),
-    SCHOLARSHIP_NO_EXISTS(1013,"Scholarship not exists", HttpStatus.BAD_REQUEST),
+    SUPPORT_NO_UPDATE(1021,"Unable to update support because other PENDING", HttpStatus.BAD_REQUEST),
+    SUPPORT_NO_EXISTS(1020,"Support not exists", HttpStatus.BAD_REQUEST),
+    SUPPORT_TYPE_NO_EXISTS(1019,"Support type not exists", HttpStatus.BAD_REQUEST),
+    ENUM_INVALID(1018,"Enum invalid", HttpStatus.BAD_REQUEST),
+    TYPE_UPDATE_INVALID(1017,"Not allowed to change type", HttpStatus.BAD_REQUEST),
+    NOTIFICATION_NO_EXISTS(1016,"Notification not exists", HttpStatus.BAD_REQUEST),
+    EVENT_NO_EXISTS(1015,"Event not exists", HttpStatus.BAD_REQUEST),
+    SCHOLARSHIP_NO_EXISTS(1014,"Scholarship not exists", HttpStatus.BAD_REQUEST),
+    SUPPORT_INVALID(1013,"Support not included ( PENDING, APPROVED, REJECTED, CANCELLED, COMPLETED)", HttpStatus.BAD_REQUEST),
     REGISTRATION_INVALID(1012,"Registration not included ( PENDING, APPROVED, REJECTED, CANCELLED, EXPIRED)", HttpStatus.BAD_REQUEST),
     GENDER_INVALID(1011,"Gender not included (NAM, NU)", HttpStatus.BAD_REQUEST),
     TYPE_INVALID(1010,"Type not included (DEFAULT, EVENT, SCHOLARSHIP)", HttpStatus.BAD_REQUEST),

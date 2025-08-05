@@ -42,6 +42,7 @@ public class GlobalExceptionHandling {
                     case "StudentGender" -> toResponseEntity(ErrorCode.GENDER_INVALID);
                     case "RegistrationStatus" -> toResponseEntity(ErrorCode.REGISTRATION_INVALID);
                     case "NotificationType" -> toResponseEntity(ErrorCode.TYPE_INVALID);
+                    case "SupportStatus" -> toResponseEntity(ErrorCode.SUPPORT_INVALID);
                     default -> toResponseEntity(ErrorCode.ENUM_INVALID);
                 };
             }

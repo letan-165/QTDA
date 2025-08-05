@@ -1,6 +1,5 @@
 package com.app.qtda.internal.support.dto.request;
 
-import com.app.qtda.internal.support.entity.SupportType;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/support")
+@RequestMapping("/supportType")
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class SupportTypeController {
@@ -42,8 +42,10 @@ public class SupportTypeController {
     }
 
     @DeleteMapping("/public/removes")
-    public ApiResponse<Void> delete(@RequestBody SupportTypeDeletesRequest request) {
+    public ApiResponse<Boolean> delete(@RequestBody SupportTypeDeletesRequest request) {
         supportTypeService.delete(request);
-        return ApiResponse.<Void>builder().build();
+        return ApiResponse.<Boolean>builder()
+                .result(true)
+                .build();
     }
 }

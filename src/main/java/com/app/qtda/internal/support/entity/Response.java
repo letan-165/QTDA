@@ -24,6 +24,6 @@ public class Response extends FormUtil {
 
     @OneToOne
     @JoinColumn(name = "requestID")
-    SupportRequest supportRequest;
+    Support support;
 
 }

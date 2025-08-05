@@ -1,0 +1,70 @@
+package com.app.qtda.internal.support.service;
+
+import com.app.qtda.common.enums.SupportStatus;
+import com.app.qtda.common.exception.AppException;
+import com.app.qtda.common.exception.ErrorCode;
+import com.app.qtda.internal.support.dto.request.SupportSaveRequest;
+import com.app.qtda.internal.support.dto.response.SupportResponse;
+import com.app.qtda.internal.support.entity.Support;
+import com.app.qtda.internal.support.entity.SupportType;
+import com.app.qtda.internal.support.mapper.SupportMapper;
+import com.app.qtda.internal.support.repository.SupportRepository;
+import com.app.qtda.internal.support.repository.SupportTypeRepository;
+import com.app.qtda.internal.user.entity.Student;
+import com.app.qtda.internal.user.repository.StudentRepository;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Slf4j
+public class SupportService {
+    SupportRepository supportRepository;
+    StudentRepository studentRepository;
+    SupportTypeRepository supportTypeRepository;
+    SupportMapper supportMapper;
+
+    public List<SupportResponse>findAll(){
+        var list = supportRepository.findAll();
+        return list.stream().map(supportMapper::toSupportResponse).toList();
+    }
+
+    public SupportResponse save(SupportSaveRequest request){
+        var id = request.getSupportID();
+        if(id!=null){
+            Support support = supportRepository.findById(id)
+                    .orElseThrow(()->new AppException(ErrorCode.SUPPORT_NO_EXISTS));
+            if(!support.getStatus().equals(SupportStatus.PENDING))
+                throw new AppException(ErrorCode.SUPPORT_NO_UPDATE);
+        }
+
+        Student student = studentRepository.findById(request.getStudentID())
+                .orElseThrow(()-> new AppException(ErrorCode.STUDENT_NO_EXISTS));
+
+        SupportType supportType = supportTypeRepository.findById(request.getSupportTypeID())
+                .orElseThrow(() -> new AppException(ErrorCode.SUPPORT_TYPE_NO_EXISTS));
+
+        Support support = supportMapper.toSupport(request);
+        support.setStatus(SupportStatus.PENDING);
+        support.setStudent(student);
+        support.setSupportType(supportType);
+
+        return supportMapper.toSupportResponse(
+                supportRepository.save(support));
+    }
+
+    public SupportResponse findByID(Long supportID) {
+        Support support = supportRepository.findById(supportID)
+                .orElseThrow(()-> new AppException(ErrorCode.SUPPORT_NO_EXISTS));
+
+        return supportMapper.toSupportResponse(support);
+    }
+
+
+}

@@ -1,5 +1,6 @@
 package com.app.qtda.internal.support.entity;
 
+import com.app.qtda.common.enums.SupportStatus;
 import com.app.qtda.common.util.FormUtil;
 import com.app.qtda.internal.user.entity.Student;
 import jakarta.persistence.*;
@@ -13,11 +14,13 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SupportRequest extends FormUtil {
+public class Support extends FormUtil {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long requestID;
-    String status;
+    Long supportID;
+
+    @Enumerated(EnumType.STRING)
+    SupportStatus status;
 
     @ManyToOne
     @JoinColumn(name = "studentID")
