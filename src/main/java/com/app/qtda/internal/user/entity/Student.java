@@ -1,5 +1,6 @@
 package com.app.qtda.internal.user.entity;
 
+import com.app.qtda.common.enums.StudentGender;
 import com.app.qtda.common.util.InfoUserUtil;
 import com.app.qtda.internal.auth.entity.Account;
 import jakarta.persistence.*;
@@ -7,6 +8,8 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.UUID;
 
 
@@ -27,8 +30,10 @@ public class Student extends InfoUserUtil {
         }
     }
 
-    String dateOfBirth;
-    String gender;
+    LocalDate dateOfBirth;
+
+    @Enumerated(EnumType.STRING)
+    StudentGender gender;
     String className;
 
     @OneToOne(cascade = CascadeType.ALL)

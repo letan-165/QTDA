@@ -1,5 +1,6 @@
 package com.app.qtda.internal.user.dto.response;
 
+import com.app.qtda.common.enums.AccountRole;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -13,7 +14,7 @@ import lombok.experimental.FieldDefaults;
 public class UserResponse {
     String userID;
     String username;
-    String role;
+    AccountRole role;
     StaffResponse staff;
     StudentResponse student;
 }

@@ -40,7 +40,7 @@ public class PostService {
         var lists = notificationRepository.findAll();
         return lists.stream()
                 .map(notification -> {
-                    switch (NotificationType.valueOf(notification.getType())) {
+                    switch (notification.getType()) {
                         case DEFAULT -> {
                             return postMapper.toPostResponse(notification);
                         }
@@ -103,7 +103,7 @@ public class PostService {
                         Event eventDB = eventRepository.findById(event.getEventID())
                                 .orElseThrow(()-> new AppException(ErrorCode.EVENT_NO_EXISTS));
 
-                        if(!eventDB.getNotification().getType().equals(NotificationType.EVENT.name()))
+                        if(!eventDB.getNotification().getType().equals(NotificationType.EVENT))
                             throw new AppException(ErrorCode.TYPE_UPDATE_INVALID);
                     }
 
@@ -117,7 +117,7 @@ public class PostService {
                         Scholarship scholarshipDB = scholarshipRepository.findById(scholarship.getScholarshipID())
                                 .orElseThrow(()-> new AppException(ErrorCode.SCHOLARSHIP_NO_EXISTS));
 
-                        if(!scholarshipDB.getNotification().getType().equals(NotificationType.SCHOLARSHIP.name()))
+                        if(!scholarshipDB.getNotification().getType().equals(NotificationType.SCHOLARSHIP))
                             throw new AppException(ErrorCode.TYPE_UPDATE_INVALID);
                     }
                     scholarship.setNotification(notification);

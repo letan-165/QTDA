@@ -38,12 +38,12 @@ public class UserService {
         var accounts = accountRepository.findAll();
         return accounts.stream().map(account -> {
             var userResponse = userMapper.toUserResponse(account);
-            if(account.getRole().equals(AccountRole.STUDENT.name())){
+            if(account.getRole().equals(AccountRole.STUDENT)){
                 Student student = studentRepository.findByAccount_UserID(account.getUserID())
                         .orElseThrow(()->new AppException(ErrorCode.STUDENT_NO_EXISTS));
                 userResponse.setStudent(userMapper.toStudentResponse(student));
             }
-            if(account.getRole().equals(AccountRole.STAFF.name())){
+            if(account.getRole().equals(AccountRole.STAFF)){
                 Staff staff = staffRepository.findByAccount_UserID(account.getUserID())
                         .orElseThrow(()->new AppException(ErrorCode.STAFF_NO_EXISTS));
                 userResponse.setStaff(userMapper.toStaffResponse(staff));
@@ -119,12 +119,12 @@ public class UserService {
         Account account = accountRepository.findById(userID)
                 .orElseThrow(()->new AppException(ErrorCode.ACCOUNT_NO_EXISTS));
         UserResponse userResponse = userMapper.toUserResponse(account);
-        if(account.getRole().equals(AccountRole.STUDENT.name())){
+        if(account.getRole().equals(AccountRole.STUDENT)){
             Student student = studentRepository.findByAccount_UserID(userID)
                     .orElseThrow(()->new AppException(ErrorCode.STUDENT_NO_EXISTS));
             userResponse.setStudent(userMapper.toStudentResponse(student));
         }
-        if(account.getRole().equals(AccountRole.STAFF.name())){
+        if(account.getRole().equals(AccountRole.STAFF)){
             Staff staff = staffRepository.findByAccount_UserID(userID)
                     .orElseThrow(()-> new AppException(ErrorCode.STAFF_NO_EXISTS));
             userResponse.setStaff(userMapper.toStaffResponse(staff));

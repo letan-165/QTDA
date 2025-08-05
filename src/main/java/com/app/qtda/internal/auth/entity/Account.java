@@ -1,10 +1,9 @@
 package com.app.qtda.internal.auth.entity;
 
+import com.app.qtda.common.enums.AccountRole;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.UUID;
 
 @Entity
 @Builder
@@ -19,5 +18,7 @@ public class Account {
     @Column(unique = true)
     String username;
     String password;
-    String role;
+
+    @Enumerated(EnumType.STRING)
+    AccountRole role;
 }

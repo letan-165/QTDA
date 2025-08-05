@@ -1,5 +1,6 @@
 package com.app.qtda.internal.post.dto.response;
 
+import com.app.qtda.common.enums.NotificationType;
 import com.app.qtda.common.util.FormUtil;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
@@ -15,7 +16,7 @@ import lombok.experimental.SuperBuilder;
 public class PostResponse extends FormUtil {
     String notificationID;
     String staffName;
-    String type;
+    NotificationType type;
     ScholarshipResponse scholarship;
     EventResponse event;
 }

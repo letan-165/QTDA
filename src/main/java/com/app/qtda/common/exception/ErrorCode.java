@@ -8,10 +8,13 @@ import org.springframework.http.HttpStatusCode;
 @Getter
 @AllArgsConstructor
 public enum ErrorCode {
-    TYPE_UPDATE_INVALID(1014,"Not allowed to change type", HttpStatus.BAD_REQUEST),
-    NOTIFICATION_NO_EXISTS(1013,"Notification not exists", HttpStatus.BAD_REQUEST),
-    EVENT_NO_EXISTS(1012,"Event not exists", HttpStatus.BAD_REQUEST),
-    SCHOLARSHIP_NO_EXISTS(1011,"Scholarship not exists", HttpStatus.BAD_REQUEST),
+    ENUM_INVALID(1017,"Enum invalid", HttpStatus.BAD_REQUEST),
+    TYPE_UPDATE_INVALID(1016,"Not allowed to change type", HttpStatus.BAD_REQUEST),
+    NOTIFICATION_NO_EXISTS(1015,"Notification not exists", HttpStatus.BAD_REQUEST),
+    EVENT_NO_EXISTS(1014,"Event not exists", HttpStatus.BAD_REQUEST),
+    SCHOLARSHIP_NO_EXISTS(1013,"Scholarship not exists", HttpStatus.BAD_REQUEST),
+    REGISTRATION_INVALID(1012,"Registration not included ( PENDING, APPROVED, REJECTED, CANCELLED, EXPIRED)", HttpStatus.BAD_REQUEST),
+    GENDER_INVALID(1011,"Gender not included (NAM, NU)", HttpStatus.BAD_REQUEST),
     TYPE_INVALID(1010,"Type not included (DEFAULT, EVENT, SCHOLARSHIP)", HttpStatus.BAD_REQUEST),
     ROLE_INVALID(1009,"Role not included (ADMIN, STAFF, STUDENT)", HttpStatus.BAD_REQUEST),
     STUDENT_NO_EXISTS(1008,"Student not exists", HttpStatus.BAD_REQUEST),

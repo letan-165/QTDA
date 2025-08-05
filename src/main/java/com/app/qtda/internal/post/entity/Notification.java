@@ -1,5 +1,6 @@
 package com.app.qtda.internal.post.entity;
 
+import com.app.qtda.common.enums.NotificationType;
 import com.app.qtda.common.util.FormUtil;
 import com.app.qtda.internal.user.entity.Staff;
 import com.app.qtda.internal.user.entity.Student;
@@ -21,7 +22,9 @@ public class Notification extends FormUtil {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long notificationID;
-    String type;
+
+    @Enumerated(EnumType.STRING)
+    NotificationType type;
 
     @ManyToOne
     @JoinColumn(name = "staffID")

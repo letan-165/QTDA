@@ -1,5 +1,6 @@
 package com.app.qtda.internal.post.entity;
 
+import com.app.qtda.common.enums.RegistrationStatus;
 import com.app.qtda.internal.user.entity.Staff;
 import com.app.qtda.internal.user.entity.Student;
 import jakarta.persistence.*;
@@ -26,6 +27,8 @@ public class Registration {
     @ManyToOne
     @JoinColumn(name = "scholarshipID")
     Scholarship scholarship;
-    String status;
+
+    @Enumerated(EnumType.STRING)
+    RegistrationStatus status;
     Instant createAt;
 }

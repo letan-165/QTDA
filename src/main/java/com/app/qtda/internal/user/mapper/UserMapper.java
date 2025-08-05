@@ -19,7 +19,6 @@ public interface UserMapper {
     Account toAccount(UserSaveRequest request);
     Staff toStaff(UserSaveRequest request);
     Student toStudent(UserSaveRequest request);
-    Student toStudent(StudentSave request);
     StudentResponse toStudentResponse(Student student);
     StaffResponse toStaffResponse(Staff staff);
 
