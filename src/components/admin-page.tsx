@@ -70,9 +70,10 @@ export function AccountPage() {
     student: {
       dateOfBirth: "",
       gender: "",
-      classname: "",
+      className: ""
     },
   })
+
 
   useEffect(() => {
     loadUsers()
@@ -115,9 +116,10 @@ export function AccountPage() {
         student: {
           dateOfBirth: "",
           gender: "",
-          classname: "",
+          className: ""
         },
       })
+
     } catch (err: any) {
       toast.error(err.message || "Đăng ký người dùng thất bại.")
     }
@@ -160,7 +162,7 @@ export function AccountPage() {
     }
   }
 
-  const handleImportExcel = async (event: ChangeEvent<HTMLInputElement>) => {
+     const handleImportExcel = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (!file) {
       toast.error("Vui lòng chọn file Excel.")
@@ -199,7 +201,7 @@ export function AccountPage() {
           user.student = {
             dateOfBirth: parseExcelDate(row.dateOfBirth),
             gender: String(row.gender || ""),
-            classname: String(row.classname || ""),
+            className: String(row.classname || ""),
           }
         }
 
@@ -230,6 +232,7 @@ export function AccountPage() {
       event.target.value = "" 
     }
   }
+
 
   // Lọc người dùng theo vai trò
   const filteredUsers = users.filter((user) => {
@@ -282,7 +285,7 @@ export function AccountPage() {
                   <DropdownMenuContent>
                     <DropdownMenuLabel>Chọn vai trò</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => setNewUser({ ...newUser, role: "STUDENT", staff: undefined, student: { dateOfBirth: "", gender: "", classname: "" } })}>STUDENT</DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setNewUser({ ...newUser, role: "STUDENT", staff: undefined, student: { dateOfBirth: "", gender: "", className: "" } })}>STUDENT</DropdownMenuItem>
                     <DropdownMenuItem onClick={() => setNewUser({ ...newUser, role: "ADMIN", staff: undefined, student: undefined })}>ADMIN</DropdownMenuItem>
                     <DropdownMenuItem onClick={() => setNewUser({ ...newUser, role: "STAFF", staff: { position: "" }, student: undefined })}>STAFF</DropdownMenuItem>
                   </DropdownMenuContent>
@@ -296,7 +299,7 @@ export function AccountPage() {
                   <>
                     <Input type="date" placeholder="Date of Birth" value={newUser.student?.dateOfBirth || ""} onChange={(e) => setNewUser({ ...newUser, student: { ...newUser.student!, dateOfBirth: e.target.value } })} />
                     <Input type="text" placeholder="Gender" value={newUser.student?.gender || ""} onChange={(e) => setNewUser({ ...newUser, student: { ...newUser.student!, gender: e.target.value } })} />
-                    <Input type="text" placeholder="Classname" value={newUser.student?.classname || ""} onChange={(e) => setNewUser({ ...newUser, student: { ...newUser.student!, classname: e.target.value } })} />
+                    <Input type="text" placeholder="Classname" value={newUser.student?.className || ""} onChange={(e) => setNewUser({ ...newUser, student: { ...newUser.student!, className: e.target.value } })} />
                   </>
                 )}
               </div>
@@ -401,21 +404,29 @@ export function AccountPage() {
             <div className="flex flex-col gap-2 mt-4">
               <p><strong>User ID:</strong> {selectedUser.userID}</p>
               <p><strong>Username:</strong> {selectedUser.username}</p>
-              <p><strong>Full Name:</strong> {selectedUser.fullName}</p>
-              <p><strong>Email:</strong> {selectedUser.email}</p>
-              <p><strong>Phone:</strong> {selectedUser.phone}</p>
               <p><strong>Role:</strong> {selectedUser.role}</p>
+
               {selectedUser.role === "STAFF" && selectedUser.staff && (
-                <p><strong>Position:</strong> {selectedUser.staff.position}</p>
+                <>
+                  <p><strong>Full Name:</strong> {selectedUser.staff.fullName}</p>
+                  <p><strong>Email:</strong> {selectedUser.staff.email}</p>
+                  <p><strong>Phone:</strong> {selectedUser.staff.phone}</p>
+                  <p><strong>Position:</strong> {selectedUser.staff.position}</p>
+                </>
               )}
+
               {selectedUser.role === "STUDENT" && selectedUser.student && (
                 <>
+                  <p><strong>Full Name:</strong> {selectedUser.student.fullName}</p>
+                  <p><strong>Email:</strong> {selectedUser.student.email}</p>
+                  <p><strong>Phone:</strong> {selectedUser.student.phone}</p>
                   <p><strong>Date of Birth:</strong> {selectedUser.student.dateOfBirth}</p>
                   <p><strong>Gender:</strong> {selectedUser.student.gender}</p>
-                  <p><strong>Classname:</strong> {selectedUser.student.classname}</p>
+                  <p><strong>Class Name:</strong> {selectedUser.student.className}</p>
                 </>
               )}
             </div>
+
           ) : (
             <p>Đang tải...</p>
           )}

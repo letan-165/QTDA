@@ -61,26 +61,31 @@ export type NewUser = {
   student?: {
     dateOfBirth: string
     gender: string
-    classname: string
+    className: string
   }
 }
 
 export type UserDetail = {
   userID: string
   username: string
-  fullName: string
-  email: string
-  phone: string
-  role: string
+  password: string
+  role: "STAFF" | "STUDENT"
   staff?: {
+    fullName: string
+    phone: string
+    email: string
     position: string
   }
   student?: {
+    fullName: string
+    phone: string
+    email: string
     dateOfBirth: string
     gender: string
-    classname: string
+    className: string
   }
 }
+
 
 
 
