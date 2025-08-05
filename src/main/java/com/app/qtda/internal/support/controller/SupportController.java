@@ -21,7 +21,21 @@ public class SupportController {
     @GetMapping("/public/gets")
     ApiResponse<List<SupportResponse>> getAll(){
         return ApiResponse.<List<SupportResponse>>builder()
-                .result(supportService.findAll())
+                .result(supportService.getAll())
+                .build();
+    }
+
+    @GetMapping("/public/gets/pending")
+    ApiResponse<List<SupportResponse>> getAllPending(){
+        return ApiResponse.<List<SupportResponse>>builder()
+                .result(supportService.getAllPending())
+                .build();
+    }
+
+    @GetMapping("/public/gets/student/{studentID}")
+    ApiResponse<List<SupportResponse>> getByStudent(@PathVariable String studentID){
+        return ApiResponse.<List<SupportResponse>>builder()
+                .result(supportService.getByStudent(studentID))
                 .build();
     }
 

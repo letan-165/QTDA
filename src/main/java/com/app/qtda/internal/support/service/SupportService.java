@@ -30,18 +30,40 @@ public class SupportService {
     SupportTypeRepository supportTypeRepository;
     SupportMapper supportMapper;
 
-    public List<SupportResponse>findAll(){
+    public List<SupportResponse>getAll(){
         var list = supportRepository.findAll();
-        return list.stream().map(supportMapper::toSupportResponse).toList();
+        return list.stream().map(supportMapper::toSupportResponse)
+                .toList();
     }
+
+    public List<SupportResponse>getAllPending(){
+        var list = supportRepository.findAll();
+        return list.stream()
+                .filter(support -> support.getStatus().equals(SupportStatus.PENDING))
+                .map(supportMapper::toSupportResponse)
+                .toList();
+    }
+
+    public List<SupportResponse>getByStudent(String studentID){
+        var list = supportRepository.findAll();
+        return list.stream()
+                .filter(support -> support.getStudent().getStudentID().equals(studentID))
+                .map(supportMapper::toSupportResponse)
+                .toList();
+    }
+
+
 
     public SupportResponse save(SupportSaveRequest request){
         var id = request.getSupportID();
+        Support support = supportMapper.toSupport(request);
         if(id!=null){
-            Support support = supportRepository.findById(id)
+            Support supportDB = supportRepository.findById(id)
                     .orElseThrow(()->new AppException(ErrorCode.SUPPORT_NO_EXISTS));
-            if(!support.getStatus().equals(SupportStatus.PENDING))
+            if(!supportDB.getStatus().equals(SupportStatus.PENDING))
                 throw new AppException(ErrorCode.SUPPORT_NO_UPDATE);
+
+            support.setCreateAt(supportDB.getCreateAt());
         }
 
         Student student = studentRepository.findById(request.getStudentID())
@@ -50,7 +72,6 @@ public class SupportService {
         SupportType supportType = supportTypeRepository.findById(request.getSupportTypeID())
                 .orElseThrow(() -> new AppException(ErrorCode.SUPPORT_TYPE_NO_EXISTS));
 
-        Support support = supportMapper.toSupport(request);
         support.setStatus(SupportStatus.PENDING);
         support.setStudent(student);
         support.setSupportType(supportType);
