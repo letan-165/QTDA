@@ -13,42 +13,36 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-
-@Configuration
+@Component
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
-public class UserRunner {
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+public class UserRunner implements ApplicationRunner {
+
     AccountRepository accountRepository;
     StaffRepository staffRepository;
     StudentRepository studentRepository;
     UserMapper userMapper;
     PasswordEncoder passwordEncoder;
 
-    @Bean
-    ApplicationRunner applicationRunner(){
-        return ApplicationRunner -> {
-            List<Student> students = createDefaultStudent();
-            List<Staff> staffs = createDefaultStaff();
+    @Override
+    public void run(org.springframework.boot.ApplicationArguments args) {
+        List<Student> students = createDefaultStudent();
+        List<Staff> staffs = createDefaultStaff();
 
-            var checkSTU = studentRepository.findAll();
-            var checkSTA = staffRepository.findAll();
-            if(checkSTU.isEmpty())
-                studentRepository.saveAll(students);
+        if (studentRepository.count() == 0)
+            studentRepository.saveAll(students);
 
-            if(checkSTA.isEmpty())
-                staffRepository.saveAll(staffs);
-        };
+        if (staffRepository.count() == 0)
+            staffRepository.saveAll(staffs);
     }
-    List<Student> createDefaultStudent(){
+
+    List<Student> createDefaultStudent() {
         return List.of(
                 Student.builder()
                         .studentID("STU-00000tan")
@@ -61,7 +55,7 @@ public class UserRunner {
                         .account(Account.builder()
                                 .userID("tanSTU")
                                 .username("tan1")
-                                .password("1")
+                                .password(passwordEncoder.encode("1"))
                                 .role(AccountRole.STUDENT)
                                 .build())
                         .build(),
@@ -76,12 +70,14 @@ public class UserRunner {
                         .account(Account.builder()
                                 .userID("phuSTU")
                                 .username("phu1")
-                                .password("1")
+                                .password(passwordEncoder.encode("1"))
                                 .role(AccountRole.STUDENT)
                                 .build())
-                        .build());
+                        .build()
+        );
     }
-    List<Staff> createDefaultStaff(){
+
+    List<Staff> createDefaultStaff() {
         return List.of(
                 Staff.builder()
                         .staffID("STA-00000tan")
@@ -92,7 +88,7 @@ public class UserRunner {
                         .account(Account.builder()
                                 .userID("tanSTA")
                                 .username("tan2")
-                                .password("1")
+                                .password(passwordEncoder.encode("1"))
                                 .role(AccountRole.STAFF)
                                 .build())
                         .build(),
@@ -106,11 +102,10 @@ public class UserRunner {
                         .account(Account.builder()
                                 .userID("phuSTA")
                                 .username("phu2")
-                                .password("1")
+                                .password(passwordEncoder.encode("1"))
                                 .role(AccountRole.STAFF)
                                 .build())
                         .build()
-
         );
     }
 }

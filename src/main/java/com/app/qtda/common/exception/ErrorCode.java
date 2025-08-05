@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatusCode;
 @Getter
 @AllArgsConstructor
 public enum ErrorCode {
+    SUPPORT_TYPE_NO_EXISTS(1018,"Support type not exists", HttpStatus.BAD_REQUEST),
     ENUM_INVALID(1017,"Enum invalid", HttpStatus.BAD_REQUEST),
     TYPE_UPDATE_INVALID(1016,"Not allowed to change type", HttpStatus.BAD_REQUEST),
     NOTIFICATION_NO_EXISTS(1015,"Notification not exists", HttpStatus.BAD_REQUEST),
