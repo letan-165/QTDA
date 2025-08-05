@@ -14,7 +14,6 @@ import com.app.qtda.internal.post.repository.EventRepository;
 import com.app.qtda.internal.post.repository.NotificationRepository;
 import com.app.qtda.internal.post.repository.ScholarshipRepository;
 import com.app.qtda.internal.user.entity.Staff;
-import com.app.qtda.internal.user.entity.Student;
 import com.app.qtda.internal.user.repository.StaffRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -41,16 +40,16 @@ public class PostService {
         var lists = notificationRepository.findAll();
         return lists.stream()
                 .map(notification -> {
-                    switch (notification.getType()) {
-                        case "DEFAULT" -> {
+                    switch (NotificationType.valueOf(notification.getType())) {
+                        case DEFAULT -> {
                             return postMapper.toPostResponse(notification);
                         }
-                        case "EVENT" -> {
+                        case EVENT -> {
                             Event event = eventRepository.findByNotification_notificationID(notification.getNotificationID())
                                     .orElseThrow(() -> new AppException(ErrorCode.NOTIFICATION_NO_EXISTS));
                             return postMapper.toPostResponse(event);
                         }
-                        case "SCHOLARSHIP" -> {
+                        case SCHOLARSHIP -> {
                             Scholarship scholarship = scholarshipRepository.findByNotification_notificationID(notification.getNotificationID())
                                     .orElseThrow(() -> new AppException(ErrorCode.STAFF_NO_EXISTS));
                             return postMapper.toPostResponse(scholarship);
@@ -104,7 +103,7 @@ public class PostService {
                         Event eventDB = eventRepository.findById(event.getEventID())
                                 .orElseThrow(()-> new AppException(ErrorCode.EVENT_NO_EXISTS));
 
-                        if(!eventDB.getNotification().getType().equals("EVENT"))
+                        if(!eventDB.getNotification().getType().equals(NotificationType.EVENT.name()))
                             throw new AppException(ErrorCode.TYPE_UPDATE_INVALID);
                     }
 
@@ -118,7 +117,7 @@ public class PostService {
                         Scholarship scholarshipDB = scholarshipRepository.findById(scholarship.getScholarshipID())
                                 .orElseThrow(()-> new AppException(ErrorCode.SCHOLARSHIP_NO_EXISTS));
 
-                        if(!scholarshipDB.getNotification().getType().equals("SCHOLARSHIP"))
+                        if(!scholarshipDB.getNotification().getType().equals(NotificationType.SCHOLARSHIP.name()))
                             throw new AppException(ErrorCode.TYPE_UPDATE_INVALID);
                     }
                     scholarship.setNotification(notification);
