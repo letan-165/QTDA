@@ -54,7 +54,7 @@ public class SupportController {
                 .build();
     }
 
-    @PatchMapping("/public/confirm/{supportID}/status")
+    @PatchMapping("/public/status/{supportID}")
     ApiResponse<SupportResponse> confirmState(@PathVariable Long supportID, @RequestBody SupportSaveStateRequest request){
         return ApiResponse.<SupportResponse>builder()
                 .result(supportService.confirmState(supportID,request))

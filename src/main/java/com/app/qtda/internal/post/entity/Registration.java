@@ -6,6 +6,7 @@ import com.app.qtda.internal.user.entity.Student;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
 
@@ -30,5 +31,7 @@ public class Registration {
 
     @Enumerated(EnumType.STRING)
     RegistrationStatus status;
+
+    @CreationTimestamp
     Instant createAt;
 }

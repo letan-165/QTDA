@@ -8,6 +8,10 @@ import org.springframework.http.HttpStatusCode;
 @Getter
 @AllArgsConstructor
 public enum ErrorCode {
+    STUDENT_REGISTERED(1029,"Students who have applied for scholarships", HttpStatus.BAD_REQUEST),
+    REGISTRATION_CANCELLED(1028,"Registration has been CANCELLED", HttpStatus.BAD_REQUEST),
+    REGISTRATION_EXPIRED(1027,"Registration has been EXPIRED", HttpStatus.BAD_REQUEST),
+    REGISTRATION_NO_EXISTS(1026,"Registration not exists", HttpStatus.BAD_REQUEST),
     RESPONSE_NO_EXISTS(1025,"Response not exists", HttpStatus.BAD_REQUEST),
     SUPPORT_NO_APPROVED(1024,"Support not APPROVED", HttpStatus.BAD_REQUEST),
     SUPPORT_CANCELLED(1023,"Support has been CANCELLED", HttpStatus.BAD_REQUEST),

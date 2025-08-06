@@ -53,8 +53,6 @@ public class SupportService {
                 .toList();
     }
 
-
-
     public SupportResponse create(SupportCreateRequest request){
         Student student = studentRepository.findById(request.getStudentID())
                 .orElseThrow(()-> new AppException(ErrorCode.STUDENT_NO_EXISTS));
