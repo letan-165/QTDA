@@ -24,12 +24,6 @@ const items = [
     url: "/dashboard/admin/accounts",
     icon: UserCog,
   },
-
-  {
-    title: "Quản lý sự kiện",
-    url: "/dashboard/admin/events",
-    icon: CalendarDays,
-  },
   {
     title: "Quản lý thông báo",
     url: "/dashboard/admin/notifications",
@@ -52,7 +46,7 @@ export function AppSidebar() {
     <Sidebar collapsible="icon" className="h-full">
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>ADMIN DASHBOARD</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-xl">ADMIN DASHBOARD</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (

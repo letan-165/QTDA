@@ -1,10 +1,10 @@
-import { AccountPage } from "@/components/admin/accounts-page"
+import { NotificationPage } from "@/components/admin/notification-page"
 
 export default function Page() {
   return (
     <div >
       <div className="w-full max-w-sm">
-        <AccountPage />
+        <NotificationPage />
       </div>
     </div>
   )

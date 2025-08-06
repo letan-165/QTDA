@@ -12,8 +12,8 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "./ui/breadcrumb"
-import { SlashIcon, DeleteIcon, ChevronsUpDownIcon, EyeIcon as ViewIcon } from "lucide-react"
+} from "@/components/ui/breadcrumb"
+import { SlashIcon, TrashIcon as DeleteIcon, ChevronsUpDownIcon, EyeIcon as ViewIcon, TrashIcon } from "lucide-react"
 
 import {
   Dialog,
@@ -22,10 +22,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "./ui/dialog"
+} from "@/components/ui/dialog"
 
-import { Input } from "./ui/input"
-import { Button } from "./ui/button"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
 
 import {
   DropdownMenu,
@@ -34,7 +34,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "./ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu"
 
 import {
   Pagination,
@@ -45,7 +45,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination"
-import { Skeleton } from "./ui/skeleton"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export function AccountPage() {
   const [searchQuery, setSearchQuery] = useState("")
@@ -360,7 +360,7 @@ export function AccountPage() {
       </div>
 
       {loading ? (
-        <Skeleton className="w-full h-[200px] rounded-lg mb-8" />
+        <Skeleton className="w-full h-[500px] rounded-lg mb-8" />
       ) : (
         <table className="w-full border mb-8">
           <thead>
@@ -384,7 +384,7 @@ export function AccountPage() {
                     <ViewIcon className="w-4 h-4 text-blue-500" />
                   </button>
                   <button onClick={() => handleDelete(user.userID)}>
-                    <DeleteIcon className="w-4 h-4 text-red-500" />
+                    <TrashIcon className="w-4 h-4 text-red-500" />
                   </button>
                 </td>
               </tr>

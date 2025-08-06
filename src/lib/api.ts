@@ -20,9 +20,15 @@ export async function loginApi(username: string, password: string): Promise<stri
 
   return token
 }
-// lib/api.ts
-
-export async function fetchAllUsers() {
+export type UserResponse = {
+  userID: string
+  username: string
+  role: string
+  staff?: {
+    position: string
+  }
+}
+export async function fetchAllUsers(): Promise<UserResponse[]> {
   const res = await fetch("http://localhost:8080/api/user/public/gets", {
     method: "GET",
     headers: {
@@ -35,17 +41,9 @@ export async function fetchAllUsers() {
   }
 
   const data = await res.json()
-  return data.result // Trả về danh sách UserResponse
+  return data.result 
 }
 
-export type UserResponse = {
-  userID: string
-  username: string
-  role: string
-  staff?: {
-    position: string
-  }
-}
 
 export type NewUser = {
   fullName: string
@@ -85,9 +83,6 @@ export type UserDetail = {
     className: string
   }
 }
-
-
-
 
 export async function signUpUsers(users: NewUser[]) {
   const res = await fetch("http://localhost:8080/api/user/public/saves", {
@@ -139,4 +134,121 @@ export async function fetchUserDetail(userID: string): Promise<UserDetail> {
 
   const data = await res.json()
   return data.result // Trả về chi tiết người dùng
+}
+
+export type NotificationItem = {
+  title: string
+  content: string
+  notificationID: string
+  staffName: string
+  type: "DEFAULT" | "SCHOLARSHIP" | "EVENT"
+  scholarship?: {
+    deadline: string
+    amount: number
+  }
+  event?: {
+    startDate: string
+    location: string
+  }
+}
+
+
+export type AddNotification = {
+  staffID: string
+  posts: [
+    {
+    title: string,
+    content: string,
+    type: "DEFAULT" | "SCHOLARSHIP" | "EVENT",
+    scholarship?: {
+      deadline: string,
+      amount: number
+    },
+    event?: {
+      startDate: string,
+      location: string
+    }
+    }
+  ]
+}
+export async function fetchNotifications(): Promise<NotificationItem[]> {
+  const res = await fetch("http://localhost:8080/api/post/public/gets/notifications", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+
+  if (!res.ok) {
+    throw new Error("Không thể tải danh sách thông báo")
+  }
+
+  const data = await res.json()
+  return data.result // Trả về danh sách thông báo
+}
+export async function addNotification(notification: AddNotification) {
+  const res = await fetch("http://localhost:8080/api/post/public/saves", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(notification),
+  })
+
+  if (!res.ok) {
+    const err = await res.json()
+    throw new Error(err.error || "Thêm thông báo thất bại")
+  }
+
+  const data = await res.json()
+  return data.result // Trả về thông báo đã thêm
+}
+export async function deleteNotification(notificationIDs: string[]){
+  const res = await fetch(`http://localhost:8080/api/post/public/removes`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ notificationIDs }),
+  })
+
+  if (!res.ok) {
+    const err = await res.json()
+    throw new Error(err.error || "Xoá thông báo thất bại")
+  }
+
+  const data = await res.json()
+  return data.result // Trả về danh sách ID đã xoá
+}
+
+export async function fetchEvents(): Promise<NotificationItem[]> {
+  const res = await fetch("http://localhost:8080/api/post/public/gets/envents", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+
+  if (!res.ok) {
+    throw new Error("Không thể tải danh sách sự kiện")
+  }
+
+  const data = await res.json()
+  return data.result 
+}
+
+export async function fetchScholarships(): Promise<NotificationItem[]> {
+  const res = await fetch("http://localhost:8080/api/post/public/gets/scholarships", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+
+  if (!res.ok) {
+    throw new Error("Không thể tải danh sách sự kiện")
+  }
+
+  const data = await res.json()
+  return data.result 
 }
