@@ -1,4 +1,4 @@
-package com.app.qtda.config;
+package com.app.qtda.config.Security;
 
 import lombok.experimental.NonFinal;
 import org.springframework.beans.factory.annotation.Value;

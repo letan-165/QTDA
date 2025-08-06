@@ -1,4 +1,4 @@
-package com.app.qtda.config;
+package com.app.qtda.config.Security;
 
 import com.app.qtda.common.ApiResponse;
 import com.app.qtda.common.exception.ErrorCode;

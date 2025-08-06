@@ -1,4 +1,4 @@
-package com.app.qtda.config;
+package com.app.qtda.config.Security;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
