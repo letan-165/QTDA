@@ -3,7 +3,8 @@ package com.app.qtda.internal.support.service;
 import com.app.qtda.common.enums.SupportStatus;
 import com.app.qtda.common.exception.AppException;
 import com.app.qtda.common.exception.ErrorCode;
-import com.app.qtda.internal.support.dto.request.SupportSaveRequest;
+import com.app.qtda.internal.support.dto.request.SupportCreateRequest;
+import com.app.qtda.internal.support.dto.request.SupportSaveStateRequest;
 import com.app.qtda.internal.support.dto.response.SupportResponse;
 import com.app.qtda.internal.support.entity.Support;
 import com.app.qtda.internal.support.entity.SupportType;
@@ -54,24 +55,14 @@ public class SupportService {
 
 
 
-    public SupportResponse save(SupportSaveRequest request){
-        var id = request.getSupportID();
-        Support support = supportMapper.toSupport(request);
-        if(id!=null){
-            Support supportDB = supportRepository.findById(id)
-                    .orElseThrow(()->new AppException(ErrorCode.SUPPORT_NO_EXISTS));
-            if(!supportDB.getStatus().equals(SupportStatus.PENDING))
-                throw new AppException(ErrorCode.SUPPORT_NO_UPDATE);
-
-            support.setCreateAt(supportDB.getCreateAt());
-        }
-
+    public SupportResponse create(SupportCreateRequest request){
         Student student = studentRepository.findById(request.getStudentID())
                 .orElseThrow(()-> new AppException(ErrorCode.STUDENT_NO_EXISTS));
 
         SupportType supportType = supportTypeRepository.findById(request.getSupportTypeID())
                 .orElseThrow(() -> new AppException(ErrorCode.SUPPORT_TYPE_NO_EXISTS));
 
+        Support support = supportMapper.toSupport(request);
         support.setStatus(SupportStatus.PENDING);
         support.setStudent(student);
         support.setSupportType(supportType);
@@ -87,5 +78,21 @@ public class SupportService {
         return supportMapper.toSupportResponse(support);
     }
 
+    public SupportResponse confirmState(Long supportID,SupportSaveStateRequest request){
+        Support support = supportRepository.findById(supportID)
+                .orElseThrow(()-> new AppException(ErrorCode.SUPPORT_NO_EXISTS));
+
+        if(support.getStatus().equals(SupportStatus.CANCELLED))
+            throw new AppException(ErrorCode.SUPPORT_CANCELLED);
+
+        if(support.getStatus().equals(SupportStatus.COMPLETED))
+            throw new AppException(ErrorCode.SUPPORT_COMPLETED);
+
+        support.setStatus(request.getStatus());
+
+
+        return supportMapper.toSupportResponse(
+                supportRepository.save(support));
+    }
 
 }

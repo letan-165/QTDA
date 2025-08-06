@@ -30,4 +30,7 @@ public class Support extends FormUtil {
     @JoinColumn(name = "supportTypeID")
     SupportType supportType;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "responseID")
+    Response response;
 }

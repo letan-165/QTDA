@@ -1,7 +1,8 @@
 package com.app.qtda.internal.support.controller;
 
 import com.app.qtda.common.ApiResponse;
-import com.app.qtda.internal.support.dto.request.SupportSaveRequest;
+import com.app.qtda.internal.support.dto.request.SupportCreateRequest;
+import com.app.qtda.internal.support.dto.request.SupportSaveStateRequest;
 import com.app.qtda.internal.support.dto.response.SupportResponse;
 import com.app.qtda.internal.support.service.SupportService;
 import lombok.AccessLevel;
@@ -39,16 +40,24 @@ public class SupportController {
                 .build();
     }
 
-    @PostMapping("/public/save")
-    ApiResponse<SupportResponse> save(@RequestBody SupportSaveRequest request){
+    @PostMapping("/public/create")
+    ApiResponse<SupportResponse> create(@RequestBody SupportCreateRequest request){
         return ApiResponse.<SupportResponse>builder()
-                .result(supportService.save(request))
+                .result(supportService.create(request))
                 .build();
     }
+
     @GetMapping("/public/get/{supportID}")
     ApiResponse<SupportResponse> findByID(@PathVariable Long supportID){
         return ApiResponse.<SupportResponse>builder()
                 .result(supportService.findByID(supportID))
+                .build();
+    }
+
+    @PatchMapping("/public/confirm/{supportID}/status")
+    ApiResponse<SupportResponse> confirmState(@PathVariable Long supportID, @RequestBody SupportSaveStateRequest request){
+        return ApiResponse.<SupportResponse>builder()
+                .result(supportService.confirmState(supportID,request))
                 .build();
     }
 

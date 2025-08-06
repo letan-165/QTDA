@@ -16,6 +16,7 @@ import lombok.experimental.SuperBuilder;
 public class SupportResponse extends FormUtil {
     Long supportID;
     SupportStatus status;
-    StudentResponse student;
+    StudentSPResponse student;
     SupportType supportType;
+    SupportStaffResponse response;
 }

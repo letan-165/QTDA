@@ -1,6 +1,8 @@
 package com.app.qtda.internal.user.mapper;
 
 import com.app.qtda.internal.auth.entity.Account;
+import com.app.qtda.internal.support.dto.response.StaffSPResponse;
+import com.app.qtda.internal.support.dto.response.StudentSPResponse;
 import com.app.qtda.internal.user.dto.request.UserSaveRequest;
 import com.app.qtda.internal.user.dto.response.StaffResponse;
 import com.app.qtda.internal.user.dto.response.StudentResponse;
@@ -21,6 +23,9 @@ public interface UserMapper {
     Student toStudent(UserSaveRequest request);
     StudentResponse toStudentResponse(Student student);
     StaffResponse toStaffResponse(Staff staff);
+
+    StudentSPResponse toStudentSPResponse(Student student);
+    StaffSPResponse toStaffSPResponse(Staff staff);
 
     void updateStaffFromDto(StaffSave dto, @MappingTarget Staff staff);
     void updateStudentFromDto(StudentSave dto, @MappingTarget Student student);

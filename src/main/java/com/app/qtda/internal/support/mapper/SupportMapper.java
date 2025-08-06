@@ -1,9 +1,11 @@
 package com.app.qtda.internal.support.mapper;
 
-import com.app.qtda.internal.support.dto.request.SupportSaveRequest;
+import com.app.qtda.internal.support.dto.request.SupportCreateRequest;
+import com.app.qtda.internal.support.dto.response.StudentSPResponse;
 import com.app.qtda.internal.support.dto.response.SupportResponse;
+import com.app.qtda.internal.support.dto.response.SupportStaffResponse;
+import com.app.qtda.internal.support.entity.Response;
 import com.app.qtda.internal.support.entity.Support;
-import com.app.qtda.internal.user.dto.response.StudentResponse;
 import com.app.qtda.internal.user.entity.Student;
 import com.app.qtda.internal.user.mapper.UserMapper;
 import org.mapstruct.Mapper;
@@ -15,13 +17,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 public abstract class SupportMapper {
     @Autowired
     UserMapper userMapper;
+    @Autowired
+    ResponseMapper responseMapper;
 
     @Mapping(target = "student", source = "student", qualifiedByName = "toStudentResponse")
+    @Mapping(target = "response", source = "response", qualifiedByName = "toResponse")
     public abstract SupportResponse toSupportResponse(Support support);
-    public abstract Support toSupport(SupportSaveRequest request);
+    public abstract Support toSupport(SupportCreateRequest request);
 
     @Named("toStudentResponse")
-    public StudentResponse mapToStudentResponse(Student student) {
-        return userMapper.toStudentResponse(student);
+    public StudentSPResponse mapToStudentResponse(Student student) {
+        return userMapper.toStudentSPResponse(student);
+    }
+
+    @Named("toResponse")
+    public SupportStaffResponse mapToResponse(Response response) {
+        return responseMapper.toSupportStaffResponse(response);
     }
 }

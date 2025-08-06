@@ -21,9 +21,4 @@ public class Response extends FormUtil {
     @ManyToOne
     @JoinColumn(name = "staffID")
     Staff staff;
-
-    @OneToOne
-    @JoinColumn(name = "requestID")
-    Support support;
-
 }

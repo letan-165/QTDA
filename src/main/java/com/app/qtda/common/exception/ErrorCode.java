@@ -8,6 +8,10 @@ import org.springframework.http.HttpStatusCode;
 @Getter
 @AllArgsConstructor
 public enum ErrorCode {
+    RESPONSE_NO_EXISTS(1025,"Response not exists", HttpStatus.BAD_REQUEST),
+    SUPPORT_NO_APPROVED(1024,"Support not APPROVED", HttpStatus.BAD_REQUEST),
+    SUPPORT_CANCELLED(1023,"Support has been CANCELLED", HttpStatus.BAD_REQUEST),
+    SUPPORT_COMPLETED(1022,"Support has been COMPLETED", HttpStatus.BAD_REQUEST),
     SUPPORT_NO_UPDATE(1021,"Unable to update support because other PENDING", HttpStatus.BAD_REQUEST),
     SUPPORT_NO_EXISTS(1020,"Support not exists", HttpStatus.BAD_REQUEST),
     SUPPORT_TYPE_NO_EXISTS(1019,"Support type not exists", HttpStatus.BAD_REQUEST),
