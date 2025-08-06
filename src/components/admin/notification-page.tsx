@@ -46,7 +46,7 @@ export function NotificationPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
   const [searchQuery, setSearchQuery] = useState("")
-  const [filterRole, setFilterRole] = useState("All")
+  const [filterType, setFilterType] = useState("All")
   
 const [newNotification, setNewNotification] = useState<AddNotification>({
   staffID: "",
@@ -115,6 +115,16 @@ const [newNotification, setNewNotification] = useState<AddNotification>({
             toast.error(err.message || "Xoá thông báo thất bại.")
           }
         }
+
+    const filteredNotice = notices.filter((notice) => {
+    const matchesSearch =
+      notice.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      notice.staffName.toLowerCase().includes(searchQuery.toLowerCase())
+
+    const matchesType = filterType === "All" || notice.type === filterType
+
+    return matchesSearch && matchesType
+  })
 
   return (
     <div className="p-6 w-full min-w-[80vw] mx-auto">
@@ -316,19 +326,19 @@ const [newNotification, setNewNotification] = useState<AddNotification>({
       {/* Bộ lọc tìm kiếm */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-          <input type="text" placeholder="Tìm theo tiêu đề hoặc người gửi" className="border px-3 py-2 rounded w-full sm:w-72" />
+          <input type="text" placeholder="Tìm theo tiêu đề hoặc người gửi" className="border px-3 py-2 rounded w-full sm:w-72" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
           <DropdownMenu>
             <DropdownMenuTrigger className="border px-3 py-2 rounded w-full sm:w-auto text-left flex items-center justify-between gap-2">
-              <span>Loại thông báo</span>
+              <span><span>{filterType}</span></span>
               <ChevronsUpDownIcon className="w-4 h-4 opacity-50" />
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuLabel>Lọc theo loại</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>All</DropdownMenuItem>
-              <DropdownMenuItem>DEFAULT</DropdownMenuItem>
-              <DropdownMenuItem>SCHOLARSHIP</DropdownMenuItem>
-              <DropdownMenuItem>EVENT</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setFilterType("All")}>All</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setFilterType("DEFAULT")}>DEFAULT</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setFilterType("SCHOLARSHIP")}>SCHOLARSHIP</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setFilterType("EVENT")}>EVENT</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -351,7 +361,7 @@ const [newNotification, setNewNotification] = useState<AddNotification>({
       <div className="text-center py-10 text-gray-500">Không có thông báo nào.</div>
     ) : (
       <div className="flex flex-col gap-4 mb-8">
-        {notices.map((notice) => (
+        {filteredNotice.map((notice) => (
           <div
             key={notice.notificationID}
             className="border rounded-lg p-4 shadow-sm hover:shadow-md transition"
