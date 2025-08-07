@@ -39,6 +39,13 @@ public class RegistrationService {
                 .toList();
     }
 
+    public List<RegistrationResponse> getAllScholarship(Long scholarshipID){
+        var list = registrationRepository.findAllByScholarship_ScholarshipID(scholarshipID);
+        return list.stream()
+                .map(registrationMapper::toRegistrationResponse)
+                .toList();
+    }
+
     public List<RegistrationResponse> getAllStatus(RegistrationStatusRequest request){
         var list = registrationRepository.findAll();
         return list.stream()

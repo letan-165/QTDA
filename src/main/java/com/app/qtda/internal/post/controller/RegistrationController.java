@@ -34,6 +34,12 @@ public class RegistrationController {
                 .result(registrationService.getAllByStudent(studentID))
                 .build();
     }
+    @GetMapping("/public/gets/scholarship/{scholarshipID}")
+        public ApiResponse<List<RegistrationResponse>> getAllByScholarship(@PathVariable Long scholarshipID) {
+            return ApiResponse.<List<RegistrationResponse>>builder()
+                    .result(registrationService.getAllScholarship(scholarshipID))
+                    .build();
+        }
 
     @GetMapping("/public/gets/status")
     public ApiResponse<List<RegistrationResponse>> getAllStatus(@RequestBody RegistrationStatusRequest request) {
