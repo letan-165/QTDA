@@ -1,6 +1,6 @@
 
 export async function loginApi(username: string, password: string): Promise<string> {
-  const res = await fetch("http://localhost:8080/api/auth/login", {
+  const res = await fetch("http://localhost:8080/api/auth/public/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username, password }),
@@ -247,6 +247,38 @@ export async function fetchScholarships(): Promise<NotificationItem[]> {
 
   if (!res.ok) {
     throw new Error("Không thể tải danh sách sự kiện")
+  }
+
+  const data = await res.json()
+  return data.result 
+}
+
+export type ScholarshipRegistration = {
+  registrationID: number;
+  student: {
+    studentID: string;
+    fullName: string;
+    className: string;
+  };
+  scholarship: {
+    scholarshipID: number;
+    deadline: string; 
+    amount: number;
+  };
+  status: "PENDING" | "APPROVED" | "REJECTED"; 
+  createAt: string; 
+}
+
+export async function fetchScholarshipRegistrations(studentID: string): Promise<ScholarshipRegistration[]> {
+  const res = await fetch(`http://localhost:8080/api/registration/public/gets/student/${studentID}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+
+  if (!res.ok) {
+    throw new Error("Không thể tải danh sách đăng ký học bổng")
   }
 
   const data = await res.json()

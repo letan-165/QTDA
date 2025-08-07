@@ -360,7 +360,28 @@ export function AccountPage() {
       </div>
 
       {loading ? (
-        <Skeleton className="w-full h-[500px] rounded-lg mb-8" />
+        <table className="w-full border mb-8">
+          <thead>
+            <tr className="bg-gray-100 text-left">
+              <th className="border px-4 py-2">User ID</th>
+              <th className="border px-4 py-2">Username</th>
+              <th className="border px-4 py-2">Role</th>
+              <th className="border px-4 py-2">Position</th>
+              <th className="border px-4 py-2">Hành động</th>
+            </tr>
+          </thead>
+          <tbody>
+            {[...Array(5)].map((_, index) => (
+              <tr key={index}>
+                <td className="border px-4 py-2"><Skeleton className="h-4 w-full" /></td>
+                <td className="border px-4 py-2"><Skeleton className="h-4 w-full" /></td>
+                <td className="border px-4 py-2"><Skeleton className="h-4 w-16" /></td>
+                <td className="border px-4 py-2"><Skeleton className="h-4 w-24" /></td>
+                <td className="border px-4 py-2"><Skeleton className="h-4 w-10" /></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       ) : (
         <table className="w-full border mb-8">
           <thead>

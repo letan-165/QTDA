@@ -1,10 +1,10 @@
+"use client"
+
 import {
   UserCog,
-  Users,
-  CalendarDays,
   Bell,
   BadgeDollarSign,
-  FileCheck2,
+  LogOut,
 } from "lucide-react"
 
 import {
@@ -17,6 +17,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
+
+import { useRouter } from "next/navigation"
 
 const items = [
   {
@@ -31,17 +33,25 @@ const items = [
   },
   {
     title: "Quản lý học bổng",
-    url: "/dashboard/admin/scholarships",
+    url: "/dashboard/admin/scholarship",
     icon: BadgeDollarSign,
   },
   {
-    title: "Duyệt đơn học bổng",
-    url: "/dashboard/admin/scholarship-requests",
-    icon: FileCheck2,
+    title: "Đăng xuất",
+    url: "#",
+    icon: LogOut,
+    logout: true,
   },
 ]
 
 export function AppSidebar() {
+  const router = useRouter()
+
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken")
+    router.push("/auth/login")
+  }
+
   return (
     <Sidebar collapsible="icon" className="h-full">
       <SidebarContent>
@@ -52,10 +62,20 @@ export function AppSidebar() {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild tooltip={item.title}>
-                    <a href={item.url} className="flex items-center gap-2">
-                      <item.icon className="w-5 h-5" />
-                      <span>{item.title}</span>
-                    </a>
+                    {item.logout ? (
+                      <button
+                        onClick={handleLogout}
+                        className="flex items-center gap-2 w-full text-left"
+                      >
+                        <item.icon className="w-5 h-5" />
+                        <span>{item.title}</span>
+                      </button>
+                    ) : (
+                      <a href={item.url} className="flex items-center gap-2">
+                        <item.icon className="w-5 h-5" />
+                        <span>{item.title}</span>
+                      </a>
+                    )}
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
