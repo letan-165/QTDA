@@ -2,7 +2,7 @@ package com.app.qtda.internal.support.controller;
 
 import com.app.qtda.common.ApiResponse;
 import com.app.qtda.internal.support.dto.request.SupportCreateRequest;
-import com.app.qtda.internal.support.dto.request.SupportSaveStateRequest;
+import com.app.qtda.internal.support.dto.request.SupportStateRequest;
 import com.app.qtda.internal.support.dto.response.SupportResponse;
 import com.app.qtda.internal.support.service.SupportService;
 import lombok.AccessLevel;
@@ -26,10 +26,10 @@ public class SupportController {
                 .build();
     }
 
-    @GetMapping("/public/gets/pending")
-    ApiResponse<List<SupportResponse>> getAllPending(){
+    @GetMapping("/public/gets/status")
+    ApiResponse<List<SupportResponse>> getAllStatus(@RequestBody SupportStateRequest request){
         return ApiResponse.<List<SupportResponse>>builder()
-                .result(supportService.getAllPending())
+                .result(supportService.getAllStatus(request))
                 .build();
     }
 
@@ -55,7 +55,7 @@ public class SupportController {
     }
 
     @PatchMapping("/public/status/{supportID}")
-    ApiResponse<SupportResponse> confirmState(@PathVariable Long supportID, @RequestBody SupportSaveStateRequest request){
+    ApiResponse<SupportResponse> confirmState(@PathVariable Long supportID, @RequestBody SupportStateRequest request){
         return ApiResponse.<SupportResponse>builder()
                 .result(supportService.confirmState(supportID,request))
                 .build();

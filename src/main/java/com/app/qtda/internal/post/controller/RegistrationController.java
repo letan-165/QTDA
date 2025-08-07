@@ -1,12 +1,9 @@
 package com.app.qtda.internal.post.controller;
 
 import com.app.qtda.common.ApiResponse;
-import com.app.qtda.internal.post.dto.request.ListPostSaveRequest;
 import com.app.qtda.internal.post.dto.request.RegistrationCreateRequest;
-import com.app.qtda.internal.post.dto.request.RegistrationSaveStatusRequest;
-import com.app.qtda.internal.post.dto.response.PostResponse;
+import com.app.qtda.internal.post.dto.request.RegistrationStatusRequest;
 import com.app.qtda.internal.post.dto.response.RegistrationResponse;
-import com.app.qtda.internal.post.entity.Registration;
 import com.app.qtda.internal.post.service.RegistrationService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +28,13 @@ public class RegistrationController {
                 .build();
     }
 
+    @GetMapping("/public/gets/status")
+    public ApiResponse<List<RegistrationResponse>> getAllStatus(@RequestBody RegistrationStatusRequest request) {
+        return ApiResponse.<List<RegistrationResponse>>builder()
+                .result(registrationService.getAllStatus(request))
+                .build();
+    }
+
     @PostMapping("/public/create")
     public ApiResponse<RegistrationResponse> create(@RequestBody RegistrationCreateRequest request) {
         return ApiResponse.<RegistrationResponse>builder()
@@ -39,7 +43,7 @@ public class RegistrationController {
     }
 
     @PatchMapping("/public/status/{registrationID}")
-    public ApiResponse<RegistrationResponse> saveStatus(@PathVariable Long registrationID,@RequestBody RegistrationSaveStatusRequest request) {
+    public ApiResponse<RegistrationResponse> saveStatus(@PathVariable Long registrationID,@RequestBody RegistrationStatusRequest request) {
         return ApiResponse.<RegistrationResponse>builder()
                 .result(registrationService.saveStatus(registrationID, request))
                 .build();

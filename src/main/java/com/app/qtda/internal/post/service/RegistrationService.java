@@ -1,11 +1,10 @@
 package com.app.qtda.internal.post.service;
 
 import com.app.qtda.common.enums.RegistrationStatus;
-import com.app.qtda.common.enums.SupportStatus;
 import com.app.qtda.common.exception.AppException;
 import com.app.qtda.common.exception.ErrorCode;
 import com.app.qtda.internal.post.dto.request.RegistrationCreateRequest;
-import com.app.qtda.internal.post.dto.request.RegistrationSaveStatusRequest;
+import com.app.qtda.internal.post.dto.request.RegistrationStatusRequest;
 import com.app.qtda.internal.post.dto.response.RegistrationResponse;
 import com.app.qtda.internal.post.entity.Registration;
 import com.app.qtda.internal.post.entity.Scholarship;
@@ -21,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -33,6 +31,21 @@ public class RegistrationService {
     StudentRepository studentRepository;
     ScholarshipRepository scholarshipRepository;
     RegistrationMapper registrationMapper;
+
+    public List<RegistrationResponse> getAll(){
+        var list = registrationRepository.findAll();
+        return list.stream()
+                .map(registrationMapper::toRegistrationResponse)
+                .toList();
+    }
+
+    public List<RegistrationResponse> getAllStatus(RegistrationStatusRequest request){
+        var list = registrationRepository.findAll();
+        return list.stream()
+                .filter(registration -> registration.getStatus().equals(request.getStatus()))
+                .map(registrationMapper::toRegistrationResponse)
+                .toList();
+    }
 
     public List<RegistrationResponse> getAllByStudent(String studentID){
         var list = registrationRepository.findAllByStudent_StudentID(studentID);
@@ -65,7 +78,7 @@ public class RegistrationService {
                 registrationRepository.save(registration));
     }
 
-    public RegistrationResponse saveStatus(Long registrationID, RegistrationSaveStatusRequest request){
+    public RegistrationResponse saveStatus(Long registrationID, RegistrationStatusRequest request){
         Registration registration = registrationRepository.findById(registrationID)
                 .orElseThrow(()-> new AppException(ErrorCode.REGISTRATION_NO_EXISTS));
 

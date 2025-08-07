@@ -4,7 +4,7 @@ import com.app.qtda.common.enums.SupportStatus;
 import com.app.qtda.common.exception.AppException;
 import com.app.qtda.common.exception.ErrorCode;
 import com.app.qtda.internal.support.dto.request.SupportCreateRequest;
-import com.app.qtda.internal.support.dto.request.SupportSaveStateRequest;
+import com.app.qtda.internal.support.dto.request.SupportStateRequest;
 import com.app.qtda.internal.support.dto.response.SupportResponse;
 import com.app.qtda.internal.support.entity.Support;
 import com.app.qtda.internal.support.entity.SupportType;
@@ -37,10 +37,10 @@ public class SupportService {
                 .toList();
     }
 
-    public List<SupportResponse>getAllPending(){
+    public List<SupportResponse>getAllStatus(SupportStateRequest request){
         var list = supportRepository.findAll();
         return list.stream()
-                .filter(support -> support.getStatus().equals(SupportStatus.PENDING))
+                .filter(support -> support.getStatus().equals(request.getStatus()))
                 .map(supportMapper::toSupportResponse)
                 .toList();
     }
@@ -76,7 +76,7 @@ public class SupportService {
         return supportMapper.toSupportResponse(support);
     }
 
-    public SupportResponse confirmState(Long supportID,SupportSaveStateRequest request){
+    public SupportResponse confirmState(Long supportID, SupportStateRequest request){
         Support support = supportRepository.findById(supportID)
                 .orElseThrow(()-> new AppException(ErrorCode.SUPPORT_NO_EXISTS));
 
