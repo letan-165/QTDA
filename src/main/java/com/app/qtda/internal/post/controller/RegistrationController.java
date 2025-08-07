@@ -21,6 +21,13 @@ import java.util.List;
 public class RegistrationController {
     RegistrationService registrationService;
 
+    @GetMapping("/public/gets")
+    public ApiResponse<List<RegistrationResponse>> getAll() {
+        return ApiResponse.<List<RegistrationResponse>>builder()
+                .result(registrationService.getAll())
+                .build();
+    }
+
     @GetMapping("/public/gets/student/{studentID}")
     public ApiResponse<List<RegistrationResponse>> getAllByStudent(@PathVariable String studentID) {
         return ApiResponse.<List<RegistrationResponse>>builder()
