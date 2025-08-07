@@ -1,3 +1,5 @@
+"use client"
+import { withAuth } from "@/components/withAuth"
 import { NotificationPage } from "@/components/admin/notification-page"
 
 export default function Page() {

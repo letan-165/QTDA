@@ -17,7 +17,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-
+import Cookies from "js-cookie"
 import { useRouter } from "next/navigation"
 
 const items = [
@@ -48,7 +48,7 @@ export function AppSidebar() {
   const router = useRouter()
 
   const handleLogout = () => {
-    localStorage.removeItem("accessToken")
+    Cookies.remove("accessToken")
     router.push("/auth/login")
   }
 

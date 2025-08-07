@@ -127,23 +127,6 @@ const [newNotification, setNewNotification] = useState<AddNotification>({
 
     return matchesSearch && matchesType
   })
-      const typeCounts = filteredNotice.reduce(
-      (acc, notice) => {
-        switch (notice.type) {
-          case "DEFAULT":
-            acc.default += 1
-            break
-          case "EVENT":
-            acc.event += 1
-            break
-          case "SCHOLARSHIP":
-            acc.scholarship += 1
-            break
-        }
-        return acc
-      },
-      { default: 0, event: 0, scholarship: 0 }
-    )
 
   return (
     <div className="p-6 w-full min-w-[80vw] mx-auto">
@@ -345,15 +328,21 @@ const [newNotification, setNewNotification] = useState<AddNotification>({
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8 items-stretch">
           <div className="bg-gray-300 rounded-xl p-4 border shadow h-full flex flex-col justify-between">
             <p className="text-sm text-gray-1000">Hệ thống</p>
-            <p className="text-2xl font-semibold text-gray-1000">{typeCounts.default}</p>
+            <p className="text-2xl font-semibold text-gray-1000">            
+              {notices.filter(r => r.type === "DEFAULT").length}
+            </p>
           </div>
           <div className="bg-purple-300 rounded-xl p-4 border shadow h-full flex flex-col justify-between">
             <p className="text-sm text-purple-1000">Sự kiện</p>
-            <p className="text-2xl font-semibold text-purple-1000">{typeCounts.event}</p>
+            <p className="text-2xl font-semibold text-purple-1000">
+              {notices.filter(r => r.type === "EVENT").length}
+            </p>
           </div>
           <div className="bg-blue-200 rounded-xl p-4 border shadow h-full flex flex-col justify-between">
             <p className="text-sm text-blue-1000">Học bổng</p>
-            <p className="text-2xl font-semibold text-blue-1000">{typeCounts.scholarship}</p>
+            <p className="text-2xl font-semibold text-blue-1000">
+              {notices.filter(r => r.type === "SCHOLARSHIP").length}
+            </p>
           </div>
         </div>
 

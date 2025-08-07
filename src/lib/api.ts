@@ -269,18 +269,42 @@ export type ScholarshipRegistration = {
   createAt: string; 
 }
 
-export async function fetchScholarshipRegistrations(studentID: string): Promise<ScholarshipRegistration[]> {
-  const res = await fetch(`http://localhost:8080/api/registration/public/gets/student/${studentID}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
+export type changeStatus = {
+  registrationID: number;
+  status: "PENDING" | "APPROVED" | "REJECTED"; 
+}
+export async function fetchScholarshipRegistrations(): Promise<ScholarshipRegistration[]> {
+  try {
+    const res = await fetch("http://localhost:8080/api/registration/public/gets", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
-  if (!res.ok) {
-    throw new Error("Không thể tải danh sách đăng ký học bổng")
+    if (!res.ok) {
+      throw new Error("Không thể tải danh sách đăng ký học bổng");
+    }
+
+    const data = await res.json();
+    return data.result;
+  } catch (error) {
+    console.error("Lỗi khi fetch danh sách đăng ký học bổng:", error);
+    throw error;
   }
+}
+// api.ts
+export async function changeScholarshipStatus(
+  registrationID: number,
+  status: "PENDING" | "APPROVED" | "REJECTED"
+): Promise<ScholarshipRegistration> {
+  const res = await fetch(`http://localhost:8080/api/registration/public/status/${registrationID}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ status }),
+  });
 
-  const data = await res.json()
-  return data.result 
+  if (!res.ok) throw new Error("Không thể thay đổi trạng thái");
+  const data = await res.json();
+  return data.result;
 }

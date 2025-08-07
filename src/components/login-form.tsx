@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { loginApi } from "@/lib/api"
 import { handleLogin } from "@/lib/auth"
+import Cookies from "js-cookie"
 
 export function LoginForm({
   className,
@@ -26,27 +27,34 @@ export function LoginForm({
   const [loading, setLoading] = useState(false)
   const [progressValue, setProgressValue] = useState(0)
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setError("")
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault()
+  setLoading(true)
+  setError("")
 
-    const form = formRef.current
-    if (!form) return
+  const form = formRef.current
+  if (!form) return
 
-    const formData = new FormData(form)
-    const username = formData.get("username")?.toString().trim() || ""
-    const password = formData.get("password")?.toString().trim() || ""
+  const formData = new FormData(form)
+  const username = formData.get("username")?.toString().trim() || ""
+  const password = formData.get("password")?.toString().trim() || ""
 
-    try {
-      const token = await loginApi(username, password)
-      handleLogin(token)
-    } catch (err: any) {
-      setError(err.message || "Lỗi không xác định")
-    } finally {
-      setLoading(false)
-    }
+  try {
+    const token = await loginApi(username, password)
+
+    Cookies.set("access_token", token, {
+      expires:10 / (24 * 60), 
+      secure: true,
+      sameSite: "Strict",
+    })
+
+    handleLogin(token) 
+  } catch (err: any) {
+    setError(err.message || "Lỗi không xác định")
+  } finally {
+    setLoading(false)
   }
+}
 
   useEffect(() => {
     if (loading) {
@@ -99,7 +107,6 @@ export function LoginForm({
                     href="/auth/forgot-password"
                     className="ml-auto text-sm underline hover:underline-offset-4"
                   >
-                  
                     Quên mật khẩu?
                   </Link>
                 </div>

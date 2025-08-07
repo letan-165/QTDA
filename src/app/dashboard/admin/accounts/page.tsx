@@ -1,5 +1,6 @@
+"use client"
+import { withAuth } from "@/components/withAuth"
 import { AccountPage } from "@/components/admin/accounts-page"
-
 export default function Page() {
   return (
     <div >
@@ -9,3 +10,4 @@ export default function Page() {
     </div>
   )
 }
+//export default withAuth(Page)

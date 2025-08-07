@@ -1,5 +1,6 @@
+"use client"
+import { withAuth } from "@/components/withAuth"
 import { ScholarshipPage} from "@/components/admin/schorlaship-page"
-
 export default function Page() {
   return (
     <div >
