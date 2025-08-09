@@ -1,4 +1,5 @@
-
+import Cookies from "js-cookie"
+//login
 export async function loginApi(username: string, password: string): Promise<string> {
   const res = await fetch("http://localhost:8080/api/auth/public/login", {
     method: "POST",
@@ -20,6 +21,8 @@ export async function loginApi(username: string, password: string): Promise<stri
 
   return token
 }
+
+//admin
 export type UserResponse = {
   userID: string
   username: string
@@ -29,12 +32,7 @@ export type UserResponse = {
   }
 }
 export async function fetchAllUsers(): Promise<UserResponse[]> {
-  const res = await fetch("http://localhost:8080/api/user/public/gets", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
+  const res = await fetch("http://localhost:8080/api/user/public/gets")
 
   if (!res.ok) {
     throw new Error("Không thể tải danh sách người dùng")
@@ -121,26 +119,23 @@ export async function deleteUsers(userIDs: string[]) {
   return data.result // Trả về danh sách ID đã xoá
 }
 export async function fetchUserDetail(userID: string): Promise<UserDetail> {
-  const res = await fetch(`http://localhost:8080/api/user/public/get/${userID}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
+  const res = await fetch(`http://localhost:8080/api/user/public/get/${userID}`)
 
   if (!res.ok) {
     throw new Error("Không thể tải thông tin người dùng")
   }
 
   const data = await res.json()
-  return data.result // Trả về chi tiết người dùng
+  return data.result 
 }
 
+//notifications
 export type NotificationItem = {
   title: string
   content: string
   notificationID: string
   staffName: string
+  createAt: string
   type: "DEFAULT" | "SCHOLARSHIP" | "EVENT"
   scholarship?: {
     deadline: string
@@ -172,12 +167,7 @@ export type AddNotification = {
   ]
 }
 export async function fetchNotifications(): Promise<NotificationItem[]> {
-  const res = await fetch("http://localhost:8080/api/post/public/gets/notifications", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  })
+  const res = await fetch("http://localhost:8080/api/post/public/gets/notifications")
 
   if (!res.ok) {
     throw new Error("Không thể tải danh sách thông báo")
@@ -275,12 +265,7 @@ export type changeStatus = {
 }
 export async function fetchScholarshipRegistrations(): Promise<ScholarshipRegistration[]> {
   try {
-    const res = await fetch("http://localhost:8080/api/registration/public/gets", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const res = await fetch("http://localhost:8080/api/registration/public/gets");
 
     if (!res.ok) {
       throw new Error("Không thể tải danh sách đăng ký học bổng");
@@ -293,7 +278,7 @@ export async function fetchScholarshipRegistrations(): Promise<ScholarshipRegist
     throw error;
   }
 }
-// api.ts
+
 export async function changeScholarshipStatus(
   registrationID: number,
   status: "PENDING" | "APPROVED" | "REJECTED"
@@ -308,3 +293,99 @@ export async function changeScholarshipStatus(
   const data = await res.json();
   return data.result;
 }
+
+//student
+export async function getUserData() {
+  const userID = Cookies.get("userId")
+  if (!userID) throw new Error("Không tìm thấy userID trong cookie")
+
+  const res = await fetch(`http://localhost:8080/api/user/public/get/${userID}`)
+  if (!res.ok) throw new Error("Không thể tải thông tin người dùng")
+
+  const data = await res.json()
+  return data.result?.student || {}
+}
+
+export async function fetchStudentRegistrationsCount(): Promise<number> {
+  try {
+    const { studentID } = await getUserData()
+    if (!studentID) throw new Error("thiếu studentID")
+
+    const res = await fetch(`http://localhost:8080/api/registration/public/gets/student/${studentID}`)
+    if (!res.ok) throw new Error("Không thể tải danh sách đăng ký")
+
+    const data = await res.json()
+    return data.result?.length || 0
+  } catch (error) {
+    console.error(error)
+    return 0
+  }
+}
+
+export async function fetchStudentFullName(): Promise<string> {
+  try {
+    const { fullName } = await getUserData()
+    if (!fullName) throw new Error("thiếu fullName")
+
+    return fullName
+  } catch (error) {
+    console.error(error)
+    return ""
+  }
+}
+
+export async function fetchStudentSupportRequests(): Promise<number> {
+  try {
+    const { studentID } = await getUserData()
+    if (!studentID) throw new Error("thiếu studentID")
+
+    const res = await fetch(`http://localhost:8080/api/support/public/gets/student/${studentID}`)
+    if (!res.ok) throw new Error("Không thể tải danh sách hỗ trợ")
+
+    const data = await res.json()
+    return data.result?.length || 0
+  } catch (error) {
+    console.error(error)
+    return 0
+  }
+}
+
+export async function countNotifications(): Promise<number> {
+  try {
+    const res = await fetch(`http://localhost:8080/api/post/public/gets/notifications`)
+    if (!res.ok) throw new Error("Không thể tải danh sách thông báo")
+
+    const data = await res.json()
+    return data.result?.length || 0
+  } catch (error) {
+    console.error(error)
+    return 0
+  }
+}
+
+export async function fetchUpcomingEvents() {
+  try {
+    const res = await fetch(`http://localhost:8080/api/post/public/gets/notifications`)
+    if (!res.ok) throw new Error("Không thể tải sự kiện")
+    const data = await res.json()
+
+    const now = new Date()
+    const events = (data.result || [])
+      .filter((n: any) => n.event && new Date(n.event.startDate) > now)
+      .map((n: any) => ({
+        title: n.title,
+        date: new Date(n.event.startDate).toLocaleDateString("vi-VN"),
+        time: new Date(n.event.startDate).toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" }),
+        location: n.event.location
+      }))
+      .sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime())
+
+    return events
+  } catch (error) {
+    console.error(error)
+    return []
+  }
+}
+
+
+

@@ -92,7 +92,7 @@ export function ScholarshipPage() {
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
-        <div className="bg-gray-200 rounded-xl p-4 border shadow">
+        <div className="bg-gray-300 rounded-xl p-4 border shadow">
           <p className="text-sm text-gray-500">Tổng đơn</p>
           <p className="text-2xl font-semibold">{registrations.length}</p>
         </div>

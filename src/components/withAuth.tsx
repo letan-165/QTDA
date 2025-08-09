@@ -8,7 +8,7 @@ export function withAuth(WrappedComponent: React.ComponentType) {
     const router = useRouter()
 
     useEffect(() => {
-      const token = Cookies.get("accessToken")
+      const token = Cookies.get("access_token")
       if (!token) {
         router.push("/auth/login")
       }

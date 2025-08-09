@@ -43,7 +43,7 @@ const handleSubmit = async (e: React.FormEvent) => {
     const token = await loginApi(username, password)
 
     Cookies.set("access_token", token, {
-      expires:10 / (24 * 60), 
+      expires:20 / (24 * 60), 
       secure: true,
       sameSite: "Strict",
     })

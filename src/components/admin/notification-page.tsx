@@ -28,7 +28,6 @@ import {
 } from "@/components/ui/dialog"
 
 import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
 
 import {
   DropdownMenu,
@@ -38,9 +37,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-
-
 import { Skeleton } from "@/components/ui/skeleton"
+
+
 
 import { Textarea } from "@/components/ui/textarea"
 export function NotificationPage() {
@@ -66,57 +65,54 @@ const [newNotification, setNewNotification] = useState<AddNotification>({
     loadNotification()
   }, [])
 
-    const loadNotification = async () => {
-      try {
-        setLoading(true)
-        const data = await fetchNotifications()
-        setNotice(data)
-      } catch (err: any) {
-        setError(err.message)
-        toast.error("Lỗi khi tải thông báo.")
-      } finally {
-        setLoading(false)
+  const loadNotification = async () => {
+    try {
+      setLoading(true)
+      const data = await fetchNotifications()
+      setNotice(data)
+    } catch (err: any) {
+      setError(err.message)
+      toast.error("Lỗi khi tải thông báo.")
+    } finally {
+      setLoading(false)
       }
     }
-      const handleAddNotice = async () => {
-        if (!newNotification.posts[0].title.trim() || !newNotification.posts[0].content.trim()) {
-          toast.error("Vui lòng nhập đầy đủ thông tin")
-          return
-        }
-        try {
-          await addNotification(newNotification)
-          await loadNotification()
-          toast.success("Thêm thông báo thành công!")
-    
-          setNewNotification({
-            staffID: "",
-            posts: [
-              {
-                title: "",
-                content: "",
-                type: "DEFAULT",
-                scholarship: undefined,
-                event: undefined,
-              }
-            ],
-          });
+  const handleAddNotice = async () => {
+    if (!newNotification.posts[0].title.trim() || !newNotification.posts[0].content.trim()) {
+      toast.error("Vui lòng nhập đầy đủ thông tin")
+      return
+    }
+    try {
+      await addNotification(newNotification)
+      await loadNotification()
+      toast.success("Thêm thông báo thành công!")
 
-    
-        } catch (err: any) {
-          toast.error(err.message || "Thêm thông báo thất bại.")
-        }
-      }
-
-        const handleDelete = async (id: string) => {
-          try {
-            await deleteNotification([id])
-            setNotice(notices.filter((u) => u.notificationID !== id))
-
-            toast.success(`Đã xoá thông báo có id: ${id}`)
-          } catch (err: any) {
-            toast.error(err.message || "Xoá thông báo thất bại.")
+      setNewNotification({
+        staffID: "",
+        posts: [
+          {
+            title: "",
+            content: "",
+            type: "DEFAULT",
+            scholarship: undefined,
+            event: undefined,
           }
-        }
+        ],
+      });
+    } catch (err: any) {
+      toast.error(err.message || "Thêm thông báo thất bại.")
+    }
+      }
+    const handleDelete = async (id: string) => {
+      try {
+        await deleteNotification([id])
+        setNotice(notices.filter((u) => u.notificationID !== id))
+
+        toast.success(`Đã xoá thông báo có id: ${id}`)
+      } catch (err: any) {
+        toast.error(err.message || "Xoá thông báo thất bại.")
+      }
+    }
 
     const filteredNotice = notices.filter((notice) => {
     const matchesSearch =
@@ -332,15 +328,15 @@ const [newNotification, setNewNotification] = useState<AddNotification>({
               {notices.filter(r => r.type === "DEFAULT").length}
             </p>
           </div>
-          <div className="bg-purple-300 rounded-xl p-4 border shadow h-full flex flex-col justify-between">
-            <p className="text-sm text-purple-1000">Sự kiện</p>
-            <p className="text-2xl font-semibold text-purple-1000">
+          <div className="bg-purple-100 rounded-xl p-4 border shadow h-full flex flex-col justify-between">
+            <p className="text-sm text-purple-800">Sự kiện</p>
+            <p className="text-2xl font-semibold text-purple-500">
               {notices.filter(r => r.type === "EVENT").length}
             </p>
           </div>
-          <div className="bg-blue-200 rounded-xl p-4 border shadow h-full flex flex-col justify-between">
-            <p className="text-sm text-blue-1000">Học bổng</p>
-            <p className="text-2xl font-semibold text-blue-1000">
+          <div className="bg-blue-100 rounded-xl p-4 border shadow h-full flex flex-col justify-between">
+            <p className="text-sm text-blue-800">Học bổng</p>
+            <p className="text-2xl font-semibold text-blue-800">
               {notices.filter(r => r.type === "SCHOLARSHIP").length}
             </p>
           </div>
@@ -373,9 +369,9 @@ const [newNotification, setNewNotification] = useState<AddNotification>({
       <div className="flex flex-col gap-4">
       {[...Array(3)].map((_, idx) => (
         <div key={idx} className="border rounded-lg p-4 shadow animate-pulse space-y-2">
-          <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-          <div className="h-3 bg-gray-200 rounded w-full"></div>
-          <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+            <Skeleton className="h-4 bg-gray-200 rounded w-3/4"></Skeleton>
+            <Skeleton className="h-3 bg-gray-200 rounded w-full"></Skeleton>
+            <Skeleton className="h-3 bg-gray-200 rounded w-1/2"></Skeleton>
         </div>
       ))}
     </div>

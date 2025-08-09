@@ -1,13 +1,13 @@
 "use client"
 import { withAuth } from "@/components/withAuth"
-import { DashboardStudent} from "@/components/student/account-page"
-export  function Page() {
+import { NotificationPage } from "@/components/student/notification-page"
+
+export default function Page() {
   return (
     <div >
       <div className="w-full max-w-sm">
-        <DashboardStudent />
+        <NotificationPage />
       </div>
     </div>
   )
 }
-export default withAuth(Page)

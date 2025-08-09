@@ -48,7 +48,7 @@ export function AppSidebar() {
   const router = useRouter()
 
   const handleLogout = () => {
-    Cookies.remove("accessToken")
+    Cookies.remove("access_token")
     router.push("/auth/login")
   }
 

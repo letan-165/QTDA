@@ -1,4 +1,5 @@
 import { jwtDecode } from "jwt-decode"
+import Cookies from "js-cookie"
 
 type DecodedToken = {
   sub: string
@@ -11,10 +12,12 @@ export function handleLogin(token: string) {
   const decoded: DecodedToken = jwtDecode(token)
   const role = decoded.scope
 
-  localStorage.setItem("token", token)
-  localStorage.setItem("role", role)
-  localStorage.setItem("userId", decoded.sub)
+  // Lưu vào cookie thay vì localStorage
+  Cookies.set("token", token, { expires: 1 }) // 1 ngày
+  Cookies.set("role", role, { expires: 1 })
+  Cookies.set("userId", decoded.sub, { expires: 1 })
 
+  // Điều hướng theo role
   switch (role) {
     case "ADMIN":
       window.location.href = "/dashboard/admin/accounts"
