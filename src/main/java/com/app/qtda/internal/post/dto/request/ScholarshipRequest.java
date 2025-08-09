@@ -13,6 +13,7 @@ import java.time.Instant;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ScholarshipRequest {
     String scholarshipID;
+    String name;
     Instant deadline;
     BigDecimal amount;
 }

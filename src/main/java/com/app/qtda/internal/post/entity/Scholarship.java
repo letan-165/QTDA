@@ -19,6 +19,7 @@ public class Scholarship {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long scholarshipID;
+    String name;
     Instant deadline;
 
     @OneToOne(optional = true, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
