@@ -193,7 +193,7 @@ const [newNotification, setNewNotification] = useState<AddNotification>({
                             {
                               ...prev.posts[0],
                               type: type as "DEFAULT" | "SCHOLARSHIP" | "EVENT",
-                              scholarship: type === "SCHOLARSHIP" ? { deadline: "", amount: 0 } : undefined,
+                              scholarship: type === "SCHOLARSHIP" ? { deadline: "", amount: 0, name:"" } : undefined,
                               event: type === "EVENT" ? { startDate: "", location: "" } : undefined,
                             },
                           ],
@@ -207,50 +207,76 @@ const [newNotification, setNewNotification] = useState<AddNotification>({
               </DropdownMenu>
 
               {/*  SCHOLARSHIP */}
-              {newNotification.posts[0].type === "SCHOLARSHIP" && (
-                <>
-                  <Input
-                    type="date"
-                    placeholder="Hạn đăng ký học bổng"
-                    value={newNotification.posts[0].scholarship?.deadline.split("T")[0] || ""}
-                    onChange={(e) =>
-                      setNewNotification((prev) => ({
-                        ...prev,
-                        posts: [
-                          {
-                            ...prev.posts[0],
-                            scholarship: {
-                              ...prev.posts[0].scholarship,
-                              deadline: `${e.target.value}T00:00:00Z`,
-                              amount: prev.posts[0].scholarship?.amount || 0,
+                {newNotification.posts[0].type === "SCHOLARSHIP" && (
+                  <>
+                    <Input
+                      type="text"
+                      placeholder="Tên học bổng"
+                      value={newNotification.posts[0].scholarship?.name || ""}
+                      onChange={(e) =>
+                        setNewNotification((prev) => ({
+                          ...prev,
+                          posts: [
+                            {
+                              ...prev.posts[0],
+                              scholarship: {
+                                ...prev.posts[0].scholarship,
+                                name: e.target.value,
+                                deadline: prev.posts[0].scholarship?.deadline || "",
+                                amount: prev.posts[0].scholarship?.amount || 0,
+                              },
                             },
-                          },
-                        ],
-                      }))
-                    }
-                  />
-                  <Input
-                    type="number"
-                    placeholder="Số tiền học bổng"
-                    value={newNotification.posts[0].scholarship?.amount || ""}
-                    onChange={(e) =>
-                      setNewNotification((prev) => ({
-                        ...prev,
-                        posts: [
-                          {
-                            ...prev.posts[0],
-                            scholarship: {
-                              ...prev.posts[0].scholarship,
-                              amount: parseFloat(e.target.value) || 0,
-                              deadline: prev.posts[0].scholarship?.deadline || "",
+                          ],
+                        }))
+                      }
+                    />
+
+                    <Input
+                      type="date"
+                      placeholder="Hạn đăng ký học bổng"
+                      value={newNotification.posts[0].scholarship?.deadline.split("T")[0] || ""}
+                      onChange={(e) =>
+                        setNewNotification((prev) => ({
+                          ...prev,
+                          posts: [
+                            {
+                              ...prev.posts[0],
+                              scholarship: {
+                                ...prev.posts[0].scholarship,
+                                deadline: `${e.target.value}T00:00:00Z`,
+                                amount: prev.posts[0].scholarship?.amount || 0,
+                                name: prev.posts[0].scholarship?.name || "",
+                              },
                             },
-                          },
-                        ],
-                      }))
-                    }
-                  />
-                </>
-              )}
+                          ],
+                        }))
+                      }
+                    />
+
+                    <Input
+                      type="number"
+                      placeholder="Số tiền học bổng"
+                      value={newNotification.posts[0].scholarship?.amount || ""}
+                      onChange={(e) =>
+                        setNewNotification((prev) => ({
+                          ...prev,
+                          posts: [
+                            {
+                              ...prev.posts[0],
+                              scholarship: {
+                                ...prev.posts[0].scholarship,
+                                amount: parseFloat(e.target.value) || 0,
+                                deadline: prev.posts[0].scholarship?.deadline || "",
+                                name: prev.posts[0].scholarship?.name || "",
+                              },
+                            },
+                          ],
+                        }))
+                      }
+                    />
+                  </>
+                )}
+
 
               {/* EVENT */}
               {newNotification.posts[0].type === "EVENT" && (

@@ -179,7 +179,7 @@ export function ScholarshipPage() {
                     </td>
                     <td className="p-4">
                       <div className="flex flex-col">
-                        <span className="font-medium">Học bổng {registration.scholarship.scholarshipID}</span>
+                        <span className="font-medium">Học bổng {registration.scholarship.name}</span>
                         <span className="text-gray-500 text-xs">
                           {registration.scholarship.amount.toLocaleString()} VNĐ
                         </span>

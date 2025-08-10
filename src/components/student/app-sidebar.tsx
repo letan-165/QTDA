@@ -87,7 +87,7 @@ export function AppSidebar() {
     <Sidebar collapsible="icon" className="h-full">
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="text-xl">Student Portal</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-xl text-black-1000">Student Portal</SidebarGroupLabel>
           <SidebarGroupContent>
               <SidebarMenu>
                 {items.map((item) => (

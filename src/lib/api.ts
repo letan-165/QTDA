@@ -138,8 +138,10 @@ export type NotificationItem = {
   createAt: string
   type: "DEFAULT" | "SCHOLARSHIP" | "EVENT"
   scholarship?: {
+    scholarshipID: number
     deadline: string
     amount: number
+    name: string
   }
   event?: {
     startDate: string
@@ -157,7 +159,8 @@ export type AddNotification = {
     type: "DEFAULT" | "SCHOLARSHIP" | "EVENT",
     scholarship?: {
       deadline: string,
-      amount: number
+      amount: number,
+      name: string,
     },
     event?: {
       startDate: string,
@@ -174,7 +177,7 @@ export async function fetchNotifications(): Promise<NotificationItem[]> {
   }
 
   const data = await res.json()
-  return data.result // Trả về danh sách thông báo
+  return data.result 
 }
 export async function addNotification(notification: AddNotification) {
   const res = await fetch("http://localhost:8080/api/post/public/saves", {
@@ -254,6 +257,7 @@ export type ScholarshipRegistration = {
     scholarshipID: number;
     deadline: string; 
     amount: number;
+    name: string;
   };
   status: "PENDING" | "APPROVED" | "REJECTED"; 
   createAt: string; 
@@ -388,4 +392,57 @@ export async function fetchUpcomingEvents() {
 }
 
 
+export async function registerScholarship(scholarshipID: number) {
+  try {
+    const { studentID } = await getUserData()
+    if (!studentID) throw new Error("Thiếu studentID")
+    if (!scholarshipID) throw new Error("Thiếu scholarshipID")
 
+    const res = await fetch(`http://localhost:8080/api/registration/public/create`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        studentID,
+        scholarshipID,
+      }),
+    })
+
+    const data = await res.json()
+
+    if (!res.ok) {
+      // Xử lý theo errorCode trả về từ backend
+      if (data?.errorCode === "STUDENT_REGISTERED") {
+        throw new Error("Bạn đã đăng ký học bổng này rồi")
+      }
+      throw new Error(data?.message || "Đăng ký học bổng thất bại")
+    }
+
+    return data
+  } catch (error: any) {
+    throw new Error(error.message || "Có lỗi xảy ra khi đăng ký học bổng")
+  }
+}
+
+export async function fetchScholarshipRegistrationsByStudent(): Promise<ScholarshipRegistration[]> {
+  try {
+    const { studentID } = await getUserData()
+    if (!studentID) throw new Error("Không tìm thấy studentID của người dùng")
+
+    const res = await fetch("http://localhost:8080/api/registration/public/gets")
+    if (!res.ok) {
+      throw new Error("Không thể tải danh sách đăng ký học bổng")
+    }
+
+    const data = await res.json()
+
+    // Lọc danh sách chỉ lấy của studentID này
+    return (data.result || []).filter(
+      (registration: ScholarshipRegistration) => registration.student?.studentID === studentID
+    )
+  } catch (error) {
+    console.error("Lỗi khi fetch danh sách đăng ký học bổng:", error)
+    throw error
+  }
+}

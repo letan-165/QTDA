@@ -17,6 +17,8 @@ import { Label } from "@/components/ui/label"
 import { loginApi } from "@/lib/api"
 import { handleLogin } from "@/lib/auth"
 import Cookies from "js-cookie"
+import { toast } from "sonner"
+
 
 export function LoginForm({
   className,
@@ -50,7 +52,7 @@ const handleSubmit = async (e: React.FormEvent) => {
 
     handleLogin(token) 
   } catch (err: any) {
-    setError(err.message || "Lỗi không xác định")
+toast.error(err.message || "Lỗi khi đăng nhập.")
   } finally {
     setLoading(false)
   }

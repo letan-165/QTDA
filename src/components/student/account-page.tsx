@@ -213,19 +213,19 @@ export function DashboardStudent() {
 
       {/* Học bổng mới & Hỗ trợ sinh viên */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="bg-gradient-to-r from-blue-600 to-purple-500 text-white">
+        <Card className="bg-gradient-to-r bg-gray-700 text-white">
           <CardHeader>
             <CardTitle>Học bổng mới</CardTitle>
           </CardHeader>
           <CardContent>
             <p>Bạn là sinh viên cuối tháng, đăng ký ngay</p>
             <Link rel="stylesheet" href="/dashboard/student/scholarship" >
-            <Button className="mt-4 bg-white text-blue-600">Đăng ký ngay</Button>
+            <Button variant="secondary" className="mt-4">Đăng ký ngay</Button>
           </Link>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-r from-green-500 to-teal-400 text-white">
+        <Card className="bg-gradient-to-r bg-gray-700 text-white">
           <CardHeader>
             <CardTitle>Hỗ trợ sinh viên</CardTitle>
           </CardHeader>
