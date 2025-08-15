@@ -17,37 +17,6 @@ export type NewUser = {
   student?: { dateOfBirth: string; gender: string; className: string }
 }
 
-
-export type UpdateStudent = {
-  fullName: string
-  email: string
-  phone: string
-  userID: string
-  username: string
-  role: string
-  password: string
-  confirmPassword: string
-  student?: { dateOfBirth: string; gender: string; className: string }
-}
-
-export type changePassword ={
-  userID: string
-  password: string
-  confirmPassword: string
-}
-
-export async function updatePassword(users: changePassword[]) {
-  const res = await fetch("http://localhost:8080/api/user/public/saves", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ users }),
-  })
-  if (!res.ok) throw new Error((await res.json()).error || "Đăng ký người dùng thất bại")
-  return (await res.json()).result
-}
-
-
-
 export type UserDetail = {
   userID: string
   username: string
@@ -75,15 +44,16 @@ export async function signUpUsers(users: NewUser[]) {
 
 
 
-export async function updateStudent(users: UpdateStudent[]) {
+export async function updateUser(users: NewUser[]) {
   const res = await fetch("http://localhost:8080/api/user/public/saves", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ users }),
   })
-  if (!res.ok) throw new Error((await res.json()).error || "Đăng ký người dùng thất bại")
+  if (!res.ok) throw new Error((await res.json()).error || "sửa thông tin người dùng thất bại")
   return (await res.json()).result
 }
+
 
 
 export async function deleteUsers(userIDs: string[]) {

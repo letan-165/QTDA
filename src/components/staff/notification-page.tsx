@@ -130,6 +130,211 @@ const [newNotification, setNewNotification] = useState<AddNotification>({
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Quản lý thông báo</h1>
         <div className="flex gap-4">
+    <Dialog>
+          <DialogTrigger className="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-900">
+            + Thêm thông báo
+          </DialogTrigger>
+          <DialogContent className="max-w-2xl w-full">
+            <DialogHeader>
+              <DialogTitle>Thêm thông báo mới</DialogTitle>
+              <DialogDescription>Nhập thông tin để tạo thông báo.</DialogDescription>
+            </DialogHeader>
+
+            <div className="flex flex-col gap-4">
+              <Input
+                type="text"
+                placeholder="Tiêu đề thông báo"
+                value={newNotification.posts[0].title}
+                onChange={(e) =>
+                  setNewNotification((prev) => ({
+                    ...prev,
+                    posts: [{ ...prev.posts[0], title: e.target.value }],
+                  }))
+                }
+              />
+
+              <Textarea
+                placeholder="Nội dung thông báo"
+                value={newNotification.posts[0].content}
+                onChange={(e) =>
+                  setNewNotification((prev) => ({
+                    ...prev,
+                    posts: [{ ...prev.posts[0], content: e.target.value }],
+                  }))
+                }
+              />
+
+              <Input
+                type="text"
+                placeholder="Staff ID"
+                value={newNotification.staffID}
+                onChange={(e) =>
+                  setNewNotification((prev) => ({
+                    ...prev,
+                    staffID: e.target.value,
+                  }))
+                }
+              />
+
+              <DropdownMenu>
+                <DropdownMenuTrigger className="border px-2 py-1 rounded w-full text-left">
+                  {newNotification.posts[0].type}
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuLabel>Chọn loại</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  {["DEFAULT", "SCHOLARSHIP", "EVENT"].map((type) => (
+                    <DropdownMenuItem
+                      key={type}
+                      onSelect={() =>
+                        setNewNotification((prev) => ({
+                          ...prev,
+                          posts: [
+                            {
+                              ...prev.posts[0],
+                              type: type as "DEFAULT" | "SCHOLARSHIP" | "EVENT",
+                              scholarship: type === "SCHOLARSHIP" ? { deadline: "", amount: 0, name:"" } : undefined,
+                              event: type === "EVENT" ? { startDate: "", location: "" } : undefined,
+                            },
+                          ],
+                        }))
+                      }
+                    >
+                      {type}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              {/*  SCHOLARSHIP */}
+                {newNotification.posts[0].type === "SCHOLARSHIP" && (
+                  <>
+                    <Input
+                      type="text"
+                      placeholder="Tên học bổng"
+                      value={newNotification.posts[0].scholarship?.name || ""}
+                      onChange={(e) =>
+                        setNewNotification((prev) => ({
+                          ...prev,
+                          posts: [
+                            {
+                              ...prev.posts[0],
+                              scholarship: {
+                                ...prev.posts[0].scholarship,
+                                name: e.target.value,
+                                deadline: prev.posts[0].scholarship?.deadline || "",
+                                amount: prev.posts[0].scholarship?.amount || 0,
+                              },
+                            },
+                          ],
+                        }))
+                      }
+                    />
+
+                    <Input
+                      type="date"
+                      placeholder="Hạn đăng ký học bổng"
+                      value={newNotification.posts[0].scholarship?.deadline.split("T")[0] || ""}
+                      onChange={(e) =>
+                        setNewNotification((prev) => ({
+                          ...prev,
+                          posts: [
+                            {
+                              ...prev.posts[0],
+                              scholarship: {
+                                ...prev.posts[0].scholarship,
+                                deadline: `${e.target.value}T00:00:00Z`,
+                                amount: prev.posts[0].scholarship?.amount || 0,
+                                name: prev.posts[0].scholarship?.name || "",
+                              },
+                            },
+                          ],
+                        }))
+                      }
+                    />
+
+                    <Input
+                      type="number"
+                      placeholder="Số tiền học bổng"
+                      value={newNotification.posts[0].scholarship?.amount || ""}
+                      onChange={(e) =>
+                        setNewNotification((prev) => ({
+                          ...prev,
+                          posts: [
+                            {
+                              ...prev.posts[0],
+                              scholarship: {
+                                ...prev.posts[0].scholarship,
+                                amount: parseFloat(e.target.value) || 0,
+                                deadline: prev.posts[0].scholarship?.deadline || "",
+                                name: prev.posts[0].scholarship?.name || "",
+                              },
+                            },
+                          ],
+                        }))
+                      }
+                    />
+                  </>
+                )}
+
+
+              {/* EVENT */}
+              {newNotification.posts[0].type === "EVENT" && (
+                <>
+                  <Input
+                    type="date"
+                    placeholder="Ngày tổ chức sự kiện"
+                    value={newNotification.posts[0].event?.startDate.split("T")[0] || ""}
+                    onChange={(e) =>
+                      setNewNotification((prev) => ({
+                        ...prev,
+                        posts: [
+                          {
+                            ...prev.posts[0],
+                            event: {
+                              ...prev.posts[0].event,
+                              startDate: `${e.target.value}T00:00:00Z`,
+                              location: prev.posts[0].event?.location || "",
+                            },
+                          },
+                        ],
+                      }))
+                    }
+                  />
+                  <Input
+                    type="text"
+                    placeholder="Địa điểm"
+                    value={newNotification.posts[0].event?.location || ""}
+                    onChange={(e) =>
+                      setNewNotification((prev) => ({
+                        ...prev,
+                        posts: [
+                          {
+                            ...prev.posts[0],
+                            event: {
+                              ...prev.posts[0].event,
+                              location: e.target.value,
+                              startDate: prev.posts[0].event?.startDate || "",
+                            },
+                          },
+                        ],
+                      }))
+                    }
+                  />
+                </>
+              )}
+            </div>
+
+            <div className="mt-4 flex justify-end">
+              <button
+                onClick={handleAddNotice}
+                className="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-900"
+              >
+                Thêm thông báo
+              </button>
+            </div>
+          </DialogContent>
+        </Dialog>
         </div>
       </div>
 

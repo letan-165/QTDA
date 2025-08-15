@@ -31,10 +31,8 @@ export function ProfilePage() {
     fullName: "",
     email: "",
     phone: "",
-    student: {
-      dateOfBirth: "",
-      gender: "",
-      className: "",
+    staff: {
+      position: "",
     },
   })
 
@@ -53,13 +51,11 @@ export function ProfilePage() {
         password: "",
         confirmPassword: "",
         role: detail.role,
-        fullName: detail.student?.fullName  || "",
-        email: detail.student?.email ||  "",
-        phone: detail.student?.phone || "",
-        student: {
-          dateOfBirth: detail.student?.dateOfBirth || "",
-          gender: detail.student?.gender || "",
-          className: detail.student?.className || "",
+        fullName: detail.staff?.fullName  || "",
+        email: detail.staff?.email ||  "",
+        phone: detail.staff?.phone || "",
+        staff :{
+          position: detail.staff?.position || ""
         },
       })
     } catch (err: any) {
@@ -94,11 +90,9 @@ export function ProfilePage() {
         phone: updatedUser.phone,
         password: updatedUser.password || "",
         confirmPassword: updatedUser.confirmPassword || "",
-        ...(updatedUser.role === "STUDENT" && {
-          student: {
-            dateOfBirth: updatedUser.student.dateOfBirth,
-            gender: updatedUser.student.gender,
-            className: updatedUser.student.className,
+        ...(updatedUser.role === "STAFF" && {
+          staff: {
+            position: updatedUser.staff.position
           },
         }),
       }]
@@ -115,10 +109,10 @@ export function ProfilePage() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    if (name in updatedUser.student) {
+    if (name in updatedUser.staff) {
       setUpdatedUser((prev) => ({
         ...prev,
-        student: { ...prev.student, [name]: value },
+        student: { ...prev.staff, [name]: value },
       }))
     } else {
       setUpdatedUser((prev) => ({ ...prev, [name]: value }))
@@ -216,34 +210,14 @@ export function ProfilePage() {
                 onChange={handleInputChange}
               />
             </div>
-            {user.role === "STUDENT" && (
+            {user.role === "STAFF" && (
               <>
                 <div>
-                  <Label htmlFor="dateOfBirth">Ngày sinh</Label>
+                  <Label htmlFor="dateOfBirth">Vị trí</Label>
                   <Input
                     id="dateOfBirth"
                     name="dateOfBirth"
-                    value={updatedUser.student.dateOfBirth}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="gender">Giới tính</Label>
-                  <Input
-                    id="gender"
-                    name="gender"
-                    value={updatedUser.student.gender}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="className">Lớp</Label>
-                  <Input
-                    id="className"
-                    name="className"
-                    value={updatedUser.student.className}
+                    value={updatedUser.staff.position}
                     onChange={handleInputChange}
                     required
                   />
@@ -268,31 +242,19 @@ export function ProfilePage() {
                 <td className="border px-4 py-2 font-semibold">Vai trò</td>
                 <td className="border px-4 py-2">{user.role}</td>
               </tr>
-              {user.role === "STUDENT" && user.student && (
+              {user.role === "STAFF" && user.staff && (
                 <>
                   <tr>
                     <td className="border px-4 py-2 font-semibold">Họ tên</td>
-                    <td className="border px-4 py-2">{user.student.fullName}</td>
-                  </tr>
-                  <tr>
-                    <td className="border px-4 py-2 font-semibold">Ngày sinh</td>
-                    <td className="border px-4 py-2">{user.student.dateOfBirth}</td>
-                  </tr>
-                  <tr>
-                    <td className="border px-4 py-2 font-semibold">Giới tính</td>
-                    <td className="border px-4 py-2">{user.student.gender}</td>
-                  </tr>
-                  <tr>
-                    <td className="border px-4 py-2 font-semibold">Lớp</td>
-                    <td className="border px-4 py-2">{user.student.className}</td>
+                    <td className="border px-4 py-2">{user.staff.fullName}</td>
                   </tr>
                   <tr>
                     <td className="border px-4 py-2 font-semibold">SĐT</td>
-                    <td className="border px-4 py-2">{user.student.phone}</td>
+                    <td className="border px-4 py-2">{user.staff.phone}</td>
                   </tr>
                   <tr>
                     <td className="border px-4 py-2 font-semibold">Email</td>
-                    <td className="border px-4 py-2">{user.student.email}</td>
+                    <td className="border px-4 py-2">{user.staff.email}</td>
                   </tr>
                 </>
               )}

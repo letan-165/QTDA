@@ -49,7 +49,7 @@ export function handleLogin(accessToken: string, router: AppRouterInstance) {
       router.push("/dashboard/student");
       break;
     case "STAFF":
-      router.push("/dashboard/staff");
+      router.push("/dashboard/staff/notifications");
       break;
     default:
       router.push("/dashboard");
