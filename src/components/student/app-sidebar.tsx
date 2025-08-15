@@ -37,7 +37,6 @@ import {
 } from "@/components/ui/dropdown-menu"
 import Cookies from "js-cookie"
 import { useRouter } from "next/navigation"
-import { url } from "inspector"
 
 const items = [
   {
@@ -59,8 +58,8 @@ const items = [
     title: "Hỗ trợ",
     icon: HelpCircle,
     subItems: [
-      { title: "Tạo hỗ trợ mới", url: "/dashboard/support/create" },
-      { title: "Xem phản hồi", url: "/dashboard/support/feedback" },
+      { title: "Tạo hỗ trợ mới", url: "/dashboard/student/supports/request" },
+      { title: "Xem phản hồi", url: "/dashboard/student/supports/feedback" },
     ],
   },
 ]
@@ -69,7 +68,7 @@ const settingsItem = {
   title: "Cài đặt",
   icon: Settings,
   subItems: [
-    { title: "Thông tin cá nhân", url: "/dashboard/settings/profile" },
+    { title: "Thông tin cá nhân", url: "/dashboard/student/profile" },
     { title: "Đổi mật khẩu", url: "/auth/reset-password" },
     { title: "Đăng xuất", logout: true },
   ],
@@ -129,7 +128,6 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      {/* Footer chứa Cài đặt */}
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -145,17 +143,23 @@ export function AppSidebar() {
                 className="w-[--radix-popper-anchor-width]"
               >
                 {settingsItem.subItems.map((item) => (
-                  <DropdownMenuItem key={item.title} asChild>
-                    {item.url ? (
+                  <DropdownMenuItem
+                    key={item.title}
+                    asChild={!item.logout} 
+                    onClick={item.logout ? handleLogout : undefined}
+                  >
+                    {item.url && !item.logout ? (
                       <a href={item.url}>
                         <span>{item.title}</span>
                       </a>
                     ) : (
-                      <span>{item.title}</span>
+                      <span className={item.logout ? "text-red-700 cursor-pointer" : ""}>
+                        {item.title}
+                      </span>
                     )}
                   </DropdownMenuItem>
                 ))}
-              </DropdownMenuContent>
+                </DropdownMenuContent>
             </DropdownMenu>
           </SidebarMenuItem>
         </SidebarMenu>

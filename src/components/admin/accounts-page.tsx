@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState, ChangeEvent } from "react"
-import { fetchAllUsers, signUpUsers, NewUser, UserResponse, deleteUsers, UserDetail, fetchUserDetail } from "@/lib/api"
+import { fetchAllUsers, signUpUsers, NewUser, UserResponse, deleteUsers, UserDetail, fetchUserDetail } from "@/lib/api/userApi"
 import { toast } from "sonner"
 import * as XLSX from "xlsx"
 
@@ -207,7 +207,6 @@ export function AccountPage() {
 
         return user
       })
-      // Validate required fields
       const invalidUsers = importedUsers.filter(
         (user) => !user.userID.trim() || !user.username.trim() || !user.password.trim()
       )
@@ -233,8 +232,6 @@ export function AccountPage() {
     }
   }
 
-
-  // Lọc người dùng theo vai trò
   const filteredUsers = users.filter((user) => {
     const matchesSearch =
       user.userID.toLowerCase().includes(searchQuery.toLowerCase()) ||

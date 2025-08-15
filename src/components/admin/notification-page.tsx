@@ -2,7 +2,7 @@
 "use client"
 
 import { useEffect, useState, ChangeEvent } from "react"
-import { addNotification, fetchNotifications, AddNotification, NotificationItem, deleteNotification } from "@/lib/api"
+import { addNotification, fetchNotifications, AddNotification, NotificationItem, deleteNotification } from "@/lib/api/notificationApi"
 import { toast } from "sonner"
 import * as XLSX from "xlsx"
 

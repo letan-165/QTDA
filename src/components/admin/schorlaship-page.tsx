@@ -26,7 +26,7 @@ import {
   fetchScholarshipRegistrations,
   changeScholarshipStatus,
   ScholarshipRegistration,
-} from "@/lib/api"
+} from "@/lib/api/scholarshipApi"
 
 export function ScholarshipPage() {
   const [loading, setLoading] = useState(true)

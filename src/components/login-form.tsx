@@ -14,49 +14,43 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { loginApi } from "@/lib/api"
-import { handleLogin } from "@/lib/auth"
-import Cookies from "js-cookie"
+import { loginApi } from "@/lib/api/authApi"
 import { toast } from "sonner"
+import { useRouter } from "next/navigation";
 
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
+  const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null)
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
   const [progressValue, setProgressValue] = useState(0)
 
 const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault()
-  setLoading(true)
-  setError("")
+    e.preventDefault();
+    setLoading(true);
+    setError("");
 
-  const form = formRef.current
-  if (!form) return
+    const form = formRef.current;
+    if (!form) return;
 
-  const formData = new FormData(form)
-  const username = formData.get("username")?.toString().trim() || ""
-  const password = formData.get("password")?.toString().trim() || ""
+    const formData = new FormData(form);
+    const username = (formData.get("username") as string)?.trim() || "";
+    const password = (formData.get("password") as string)?.trim() || "";
 
-  try {
-    const token = await loginApi(username, password)
-
-    Cookies.set("access_token", token, {
-      expires:20 / (24 * 60), 
-      secure: true,
-      sameSite: "Strict",
-    })
-
-    handleLogin(token) 
-  } catch (err: any) {
-toast.error(err.message || "Lỗi khi đăng nhập.")
-  } finally {
-    setLoading(false)
-  }
-}
+    try {
+      await loginApi(username, password, router); 
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Lỗi khi đăng nhập.";
+      toast.error(message);
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (loading) {

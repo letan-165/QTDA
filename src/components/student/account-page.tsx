@@ -7,8 +7,9 @@ import {
   fetchStudentSupportRequests, 
   countNotifications,
   getUserData,
-  fetchUpcomingEvents
-} from "@/lib/api"
+  fetchUpcomingEvents,
+  fetchRecentActivities
+} from "@/lib/api/studentApi"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { GraduationCap, Headphones, Bell, Calendar } from "lucide-react"
@@ -32,39 +33,12 @@ export function DashboardStudent() {
   const [recentActivities, setRecentActivities] = useState<any[]>([]) 
   const [upcomingEvents, setUpcomingEvents] = useState<any[]>([])
 
-  async function fetchRecentActivities() {
-  try {
-    const { studentID } = await getUserData()
-    const [scholarships, supports] = await Promise.all([
-      fetch(`http://localhost:8080/api/registration/public/gets/student/${studentID}`).then(res => res.json()),
-      fetch(`http://localhost:8080/api/support/public/gets/student/${studentID}`).then(res => res.json())
-    ])
 
-    const activities = [
-      ...scholarships.result.map((item: any) => ({
-        icon: <GraduationCap className="w-5 h-5 text-green-500" />,
-        title: `Đăng ký học bổng ${item.scholarship?.name || ""}`,
-        desc: "Hồ sơ đã được nộp thành công",
-        time: new Date(item.createAt).toLocaleString("vi-VN")
-      })),
-      ...supports.result.map((item: any) => ({
-        icon: <Headphones className="w-5 h-5 text-yellow-500" />,
-        title: `Yêu cầu hỗ trợ ${item.supportCode || ""}`,
-        desc: item.subject || "Đã gửi yêu cầu hỗ trợ",
-        time: new Date(item.createAt).toLocaleString("vi-VN")
-      }))
-    ]
-
-    return activities.sort(
-      (a, b) => new Date(b.time).getTime() - new Date(a.time).getTime()
-    )
-  } catch (error) {
-    console.error(error)
-    return []
-  }
-}
   useEffect(() => {
-    const loadData = async () => {
+    loadData()
+  }, [])
+
+      const loadData = async () => {
       const [
         scholarshipCount,
         fullName,
@@ -89,8 +63,6 @@ export function DashboardStudent() {
       setUpcomingEvents(events) 
       setLoading(false)
     }
-    loadData()
-  }, [])
 
   const stats = [
     { 
@@ -158,7 +130,7 @@ export function DashboardStudent() {
             ) : recentActivities.length === 0 ? (
               <p className="text-gray-500 text-sm">Không có hoạt động nào gần đây</p>
             ) : (
-              <ScrollArea className="flex-1 pr-4">
+              <ScrollArea className="flex-1 pr-4 max-h-64">
                 <div className="space-y-4">
                   {recentActivities.map((act, idx) => (
                     <div key={idx} className="flex items-start gap-3">
@@ -211,7 +183,6 @@ export function DashboardStudent() {
         </Card>
       </div>
 
-      {/* Học bổng mới & Hỗ trợ sinh viên */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="bg-gradient-to-r bg-gray-700 text-white">
           <CardHeader>
@@ -219,7 +190,7 @@ export function DashboardStudent() {
           </CardHeader>
           <CardContent>
             <p>Bạn là sinh viên cuối tháng, đăng ký ngay</p>
-            <Link rel="stylesheet" href="/dashboard/student/scholarship" >
+            <Link rel="stylesheet" href="/dashboard/student/scholarships" >
             <Button variant="secondary" className="mt-4">Đăng ký ngay</Button>
           </Link>
           </CardContent>
@@ -231,7 +202,7 @@ export function DashboardStudent() {
           </CardHeader>
           <CardContent>
             <p>Cần hỗ trợ? Gửi yêu cầu và nhận phản hồi trong 24h</p>
-            <Link rel="stylesheet" href="/dashboard/student/support" >
+            <Link rel="stylesheet" href="/dashboard/student/supports/request" >
             <Button variant="secondary" className="mt-4">Gửi yêu cầu</Button>
             </Link>
           </CardContent>

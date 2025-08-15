@@ -2,7 +2,7 @@
 "use client"
 
 import { useEffect, useState, ChangeEvent } from "react"
-import { addNotification, fetchNotifications,  NotificationItem } from "@/lib/api"
+import { fetchNotifications,  NotificationItem } from "@/lib/api/notificationApi"
 import { toast } from "sonner"
 import * as XLSX from "xlsx"
 
@@ -191,7 +191,6 @@ const filteredNotice = notices
             </div>
 
             <div className="mt-2 flex flex-wrap text-sm text-gray-500 gap-4">
-              <div>👤 Người gửi: {notice.staffName}</div>
             <div>🕒 Ngày tạo: {new Date(notice.createAt).toLocaleDateString("vi-VN")} </div>
 
               {notice.scholarship && (

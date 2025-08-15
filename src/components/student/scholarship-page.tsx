@@ -27,11 +27,13 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 
 import {
   fetchScholarshipRegistrationsByStudent,
-  ScholarshipRegistration,
-  fetchNotifications,
-  registerScholarship,
-  NotificationItem
-} from "@/lib/api"
+  registerScholarship
+} from "@/lib/api/studentApi"
+
+import { ScholarshipRegistration } from "@/lib/api/scholarshipApi"
+
+import {NotificationItem, fetchNotifications } from "@/lib/api/notificationApi"
+
 
 export function ScholarshipPage() {
   const [loading, setLoading] = useState(true)
@@ -91,7 +93,6 @@ export function ScholarshipPage() {
 
   return (
     <div className="p-6 w-full min-w-[80vw] mx-auto">
-      {/* Header */}
       <div className="mb-6 flex justify-between items-center">
         <h1 className="text-3xl font-bold">Danh sách học bổng đã đăng ký</h1>
           <Dialog open={openDialog} onOpenChange={setOpenDialog}>
@@ -105,16 +106,12 @@ export function ScholarshipPage() {
                 <DialogTitle>Chọn học bổng để đăng ký</DialogTitle>
               </DialogHeader>
 
-              {/* Thanh tìm kiếm */}
-
-
               {/* Danh sách */}
                   {loading ? (
                   <div className="flex flex-col gap-4">
                     {[...Array(3)].map((_, idx) => (
                       <div key={idx} className="border rounded-lg p-4 shadow animate-pulse space-y-2">
                         <Skeleton className="h-4 bg-gray-200 rounded w-3/4" />
-                        <Skeleton className="h-3 bg-gray-200 rounded w-full" />
                         <Skeleton className="h-3 bg-gray-200 rounded w-1/2" />
                       </div>
                     ))}
@@ -284,6 +281,9 @@ export function ScholarshipPage() {
                       )}
                       {registration.status === "REJECTED" && (
                         <span className="bg-red-100 text-red-800 px-2 py-1 rounded text-xs">Từ chối</span>
+                      )}
+                      {registration.status === "EXPIRED" && (
+                        <span className="bg-gray-300 text-gray-800 px-2 py-1 rounded text-xs">Quá hạn</span>
                       )}
                     </td>
                   </tr>
