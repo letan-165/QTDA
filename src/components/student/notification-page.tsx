@@ -108,9 +108,6 @@ const filteredNotice = notices
           </div>
         </div>
 
-
-
-      {/* Bộ lọc tìm kiếm */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
           <input type="text" placeholder="Tìm theo tiêu đề hoặc người gửi" className="border px-3 py-2 rounded w-full sm:w-72" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />

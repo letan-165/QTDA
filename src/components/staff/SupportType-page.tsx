@@ -57,7 +57,7 @@ export function SupportTypePage() {
 
     try {
       setSubmitting(true)
-      await addSupportType([form]) // API yêu cầu mảng
+      await addSupportType([form]) 
       toast.success("Thêm danh mục hỗ trợ thành công")
       setForm({ name: "", description: "" })
       await loadData()

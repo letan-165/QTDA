@@ -48,8 +48,8 @@ const items = [
     title: "Hỗ trợ",
     icon: HelpCircle,
     subItems: [
-      { title: "Tạo danh mục hỗ trợ mới", url: "/dashboard/staff/support/response" },
-      { title: "Phản hồi", url: "/dashboard/student/supports/feedback" },
+      { title: "Tạo danh mục hỗ trợ mới", url: "/dashboard/staff/support/supportType" },
+      { title: "Phản hồi", url: "/dashboard/staff/support/response" },
     ],
   },
 ]

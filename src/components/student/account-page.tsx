@@ -6,7 +6,6 @@ import {
   fetchStudentFullName, 
   fetchStudentSupportRequests, 
   countNotifications,
-  getUserData,
   fetchUpcomingEvents,
   fetchRecentActivities
 } from "@/lib/api/studentApi"

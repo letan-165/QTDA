@@ -101,6 +101,8 @@ const [newNotification, setNewNotification] = useState<AddNotification>({
       });
     } catch (err: any) {
       toast.error(err.message || "Thêm thông báo thất bại.")
+    }finally{
+      setLoading(false)
     }
       }
     const handleDelete = async (id: string) => {

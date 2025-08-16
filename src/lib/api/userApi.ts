@@ -1,3 +1,4 @@
+import Cookies from "js-cookie"
 export type UserResponse = {
   userID: string
   username: string
@@ -72,3 +73,12 @@ export async function fetchUserDetail(userID: string): Promise<UserDetail> {
   return (await res.json()).result
 }
 
+export async function getUserData() {
+  const userID = Cookies.get("userId")
+  if (!userID) throw new Error("Không tìm thấy userID trong cookie")
+
+  const res = await fetch(`http://localhost:8080/api/user/public/get/${userID}`)
+  if (!res.ok) throw new Error("Không thể tải thông tin người dùng")
+
+  return (await res.json()).result?.student || {}
+}

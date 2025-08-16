@@ -176,7 +176,7 @@ export function SupportFeedbackPage() {
 
       {/* Sheet Component */}
       <Sheet open={!!selectedFeedback} onOpenChange={() => setSelectedFeedback(null)}>
-        <SheetContent side="right" className="w-80 p-4">
+        <SheetContent side="right" className="w96 p-4">
           <SheetHeader>
             <SheetTitle>{selectedFeedback?.title}</SheetTitle>
             <SheetDescription>{selectedFeedback?.content}</SheetDescription>
@@ -193,7 +193,7 @@ export function SupportFeedbackPage() {
             <div>
               <b>Nội dung phản hồi:</b>
             <div className="mt-2 flex justify-start">
-              <div className="bg-blue-100 text-blue-800 px-4 py-3 rounded-2xl rounded-bl-sm shadow-sm max-w-[75%] leading-relaxed">
+              <div className="bg-blue-100 text-blue-800 px-5 py-3 rounded-2xl rounded-bl-sm shadow-sm max-w-[100%] leading-relaxed">
                 {selectedFeedback?.response?.content || "Chưa có phản hồi"}
               </div>
             </div>

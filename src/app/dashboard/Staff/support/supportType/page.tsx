@@ -1,12 +1,12 @@
 "use client"
 import { withAuth } from "@/components/withAuth"
-import { ResponsePage } from "@/components/staff/response"
+import { SupportTypePage } from "@/components/staff/SupportType-page"
 
 export default function Page() {
   return (
     <div >
       <div className="w-full max-w-sm">
-        <ResponsePage />
+        <SupportTypePage />
       </div>
     </div>
   )

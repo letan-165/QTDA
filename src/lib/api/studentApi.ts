@@ -1,15 +1,7 @@
-import Cookies from "js-cookie"
+
 import { ScholarshipRegistration } from "./scholarshipApi"
 
-export async function getUserData() {
-  const userID = Cookies.get("userId")
-  if (!userID) throw new Error("Không tìm thấy userID trong cookie")
-
-  const res = await fetch(`http://localhost:8080/api/user/public/get/${userID}`)
-  if (!res.ok) throw new Error("Không thể tải thông tin người dùng")
-
-  return (await res.json()).result?.student || {}
-}
+import { getUserData } from "./userApi"
 
 export async function fetchStudentFullName(): Promise<string> {
   try {
@@ -271,3 +263,5 @@ export async function fetchSupportResponses(): Promise<SupportItem[]> {
     throw error
   }
 }
+
+
