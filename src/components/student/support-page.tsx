@@ -138,7 +138,6 @@ export function RequestPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Cột trái: Danh mục */}
-
         {renderSupportType()}
 
         {/* Cột phải: Form */}

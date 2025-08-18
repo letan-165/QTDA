@@ -124,15 +124,6 @@ const handleSubmit = async (e: React.FormEvent) => {
               </Button>
             </div>
           </form>
-
-          <div className="text-center mt-4">
-            <Link
-              href="/auth/reset-password"
-              className="text-sm underline hover:underline-offset-4"
-            >
-              Đặt lại mật khẩu
-            </Link>
-          </div>
         </CardContent>
       </Card>
     </div>

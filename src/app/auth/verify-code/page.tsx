@@ -1,4 +1,4 @@
-import { ResetPasswordWithCodeForm } from "@/components/verifycode-form"
+import { ResetPasswordWithCodeForm } from "@/components/auth/verifycode-form"
 
 export default function Page() {
   return (

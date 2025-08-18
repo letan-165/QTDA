@@ -1,5 +1,5 @@
 "use client"
-import { withAuth } from "@/components/withAuth"
+import { withAuth } from "@/components/auth/withAuth"
 import { AccountPage } from "@/components/admin/accounts-page"
 export default function Page() {
   return (

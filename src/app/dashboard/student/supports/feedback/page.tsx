@@ -1,5 +1,5 @@
 "use client"
-import { withAuth } from "@/components/withAuth"
+import { withAuth } from "@/components/auth/withAuth"
 import { SupportFeedbackPage } from "@/components/student/feedback"
 
 export default function Page() {
