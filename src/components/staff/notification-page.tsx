@@ -126,6 +126,98 @@ const [newNotification, setNewNotification] = useState<AddNotification>({
     return matchesSearch && matchesType
   })
 
+    const renderStats = () => (
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8 items-stretch">
+      <div className="bg-gray-300 rounded-xl p-4 border shadow h-full flex flex-col justify-between">
+        <p className="text-sm text-gray-1000">Hệ thống</p>
+        <p className="text-2xl font-semibold text-gray-1000">
+          {notices.filter((r) => r.type === "DEFAULT").length}
+        </p>
+      </div>
+      <div className="bg-purple-100 rounded-xl p-4 border shadow h-full flex flex-col justify-between">
+        <p className="text-sm text-purple-800">Sự kiện</p>
+        <p className="text-2xl font-semibold text-purple-500">
+          {notices.filter((r) => r.type === "EVENT").length}
+        </p>
+      </div>
+      <div className="bg-blue-100 rounded-xl p-4 border shadow h-full flex flex-col justify-between">
+        <p className="text-sm text-blue-800">Học bổng</p>
+        <p className="text-2xl font-semibold text-blue-800">
+          {notices.filter((r) => r.type === "SCHOLARSHIP").length}
+        </p>
+      </div>
+    </div>
+  )
+
+  const renderNotices = () => (
+    <div className="flex flex-col gap-4 mb-8">
+      {loading ? (
+        [...Array(3)].map((_, idx) => (
+          <div key={idx} className="border rounded-lg p-4 shadow animate-pulse space-y-2">
+            <Skeleton className="h-4 bg-gray-200 rounded w-3/4" />
+            <Skeleton className="h-3 bg-gray-200 rounded w-full" />
+            <Skeleton className="h-3 bg-gray-200 rounded w-1/2" />
+          </div>
+        ))
+      ) : error ? (
+        <div className="text-center py-10 text-red-500">{error}</div>
+      ) : filteredNotice.length === 0 ? (
+        <div className="text-center py-10 text-gray-500">Không có thông báo nào.</div>
+      ) : (
+        filteredNotice.map((notice) => (
+          <div
+            key={notice.notificationID}
+            className="border rounded-lg p-4 shadow-sm hover:shadow-md transition"
+          >
+            <div className="flex justify-between items-start">
+              <div>
+                <h2 className="text-lg font-semibold mb-1 flex items-center gap-2">
+                  {notice.title}
+                  {notice.type === "SCHOLARSHIP" && (
+                    <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">
+                      Học bổng
+                    </span>
+                  )}
+                  {notice.type === "EVENT" && (
+                    <span className="text-xs bg-purple-100 text-purple-800 px-2 py-0.5 rounded">
+                      Sự kiện
+                    </span>
+                  )}
+                  {notice.type === "DEFAULT" && (
+                    <span className="text-xs bg-gray-300 text-gray-800 px-2 py-0.5 rounded">
+                      Thông báo
+                    </span>
+                  )}
+                </h2>
+                <p className="text-gray-600 text-sm line-clamp-2">{notice.content}</p>
+              </div>
+              <div className="flex gap-2 items-center">
+                <button onClick={() => handleDelete(notice.notificationID)}>
+                  <TrashIcon className="w-4 h-4 text-red-500 cursor-pointer" />
+                </button>
+              </div>
+            </div>
+            <div className="mt-2 flex flex-wrap text-sm text-gray-500 gap-4">
+              <div>👤 Người gửi: {notice.staffName}</div>
+              {notice.scholarship && (
+                <>
+                  <div>💰 Số tiền: {notice.scholarship.amount.toLocaleString()} VND</div>
+                  <div>📅 Hạn nộp: {new Date(notice.scholarship.deadline).toLocaleDateString("vi-VN")}</div>
+                </>
+              )}
+              {notice.event && (
+                <>
+                  <div>📍 Địa điểm: {notice.event.location}</div>
+                  <div>📅 Bắt đầu: {new Date(notice.event.startDate).toLocaleDateString("vi-VN")}</div>
+                </>
+              )}
+            </div>
+          </div>
+        ))
+      )}
+    </div>
+  )
+
   return (
     <div className="p-6 w-full min-w-[80vw] mx-auto">
       {/* Header */}
@@ -348,30 +440,7 @@ const [newNotification, setNewNotification] = useState<AddNotification>({
           <BreadcrumbItem><BreadcrumbLink href="/dashboard/admin/notifications">Notices</BreadcrumbLink></BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-            {/* Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8 items-stretch">
-          <div className="bg-gray-300 rounded-xl p-4 border shadow h-full flex flex-col justify-between">
-            <p className="text-sm text-gray-1000">Hệ thống</p>
-            <p className="text-2xl font-semibold text-gray-1000">            
-              {notices.filter(r => r.type === "DEFAULT").length}
-            </p>
-          </div>
-          <div className="bg-purple-100 rounded-xl p-4 border shadow h-full flex flex-col justify-between">
-            <p className="text-sm text-purple-800">Sự kiện</p>
-            <p className="text-2xl font-semibold text-purple-500">
-              {notices.filter(r => r.type === "EVENT").length}
-            </p>
-          </div>
-          <div className="bg-blue-100 rounded-xl p-4 border shadow h-full flex flex-col justify-between">
-            <p className="text-sm text-blue-800">Học bổng</p>
-            <p className="text-2xl font-semibold text-blue-800">
-              {notices.filter(r => r.type === "SCHOLARSHIP").length}
-            </p>
-          </div>
-        </div>
-
-
-
+        {renderStats()}
       {/* Bộ lọc tìm kiếm */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
@@ -392,77 +461,7 @@ const [newNotification, setNewNotification] = useState<AddNotification>({
           </DropdownMenu>
         </div>
       </div>
-
-      {loading ? (
-      <div className="flex flex-col gap-4">
-      {[...Array(3)].map((_, idx) => (
-        <div key={idx} className="border rounded-lg p-4 shadow animate-pulse space-y-2">
-            <Skeleton className="h-4 bg-gray-200 rounded w-3/4"></Skeleton>
-            <Skeleton className="h-3 bg-gray-200 rounded w-full"></Skeleton>
-            <Skeleton className="h-3 bg-gray-200 rounded w-1/2"></Skeleton>
-        </div>
-      ))}
-    </div>
-
-    ) : error ? (
-      <div className="text-center py-10 text-red-500">{error}</div>
-    ) : notices.length === 0 ? (
-      <div className="text-center py-10 text-gray-500">Không có thông báo nào.</div>
-    ) : (
-      <div className="flex flex-col gap-4 mb-8">
-        {filteredNotice.map((notice) => (
-          <div
-            key={notice.notificationID}
-            className="border rounded-lg p-4 shadow-sm hover:shadow-md transition"
-          >
-            <div className="flex justify-between items-start">
-              <div>
-                <h2 className="text-lg font-semibold mb-1 flex items-center gap-2">
-                  {notice.title}
-                  {notice.type === "SCHOLARSHIP" && (
-                    <span className="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">
-                      Học bổng
-                    </span>
-                  )}
-                  {notice.type === "EVENT" && (
-                    <span className="text-xs bg-purple-100 text-purple-800 px-2 py-0.5 rounded">
-                      Sự kiện
-                    </span>
-                  )}
-                  {notice.type === "DEFAULT" && (
-                    <span className="text-xs bg-gray-300 text-gray-800 px-2 py-0.5 rounded">
-                      Thông báo
-                    </span>
-                  )}
-                </h2>
-                <p className="text-gray-600 text-sm line-clamp-2">{notice.content}</p>
-              </div>
-              <div className="flex gap-2 items-center">
-                <button onClick={() => handleDelete(notice.notificationID)}>
-                <TrashIcon className="w-4 h-4 text-red-500 cursor-pointer" />
-                </button>
-              </div>
-            </div>
-
-            <div className="mt-2 flex flex-wrap text-sm text-gray-500 gap-4">
-              <div>👤 Người gửi: {notice.staffName}</div>
-              {notice.scholarship && (
-                <>
-                  <div>💰 Số tiền: {notice.scholarship.amount.toLocaleString()} VND</div>
-                  <div>📅 Hạn nộp: {new Date(notice.scholarship.deadline).toLocaleDateString("vi-VN")} </div>
-                </>
-              )}
-              {notice.event && (
-                <>
-                  <div>📍 Địa điểm: {notice.event.location}</div>
-                  <div>📅 Bắt đầu: {new Date(notice.event.startDate).toLocaleDateString("vi-VN")}</div>
-                </>
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
-    )}
+     { renderNotices()}
     </div>
 
 

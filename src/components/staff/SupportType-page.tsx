@@ -68,6 +68,34 @@ export function SupportTypePage() {
       setSubmitting(false)
     }
   }
+  const renderSupportType = () =>(
+
+            <div className="space-y-3 border rounded-lg p-4 shadow-sm bg-white">
+          <h2 className="text-lg font-semibold mb-3">Danh sách danh mục hiện có</h2>
+          <ScrollArea className="h-[500px] pr-3">
+            {loading ? (
+              <div className="flex flex-col gap-4">
+                {[...Array(5)].map((_, idx) => (
+                  <div key={idx} className="border rounded-lg p-4 shadow animate-pulse space-y-2">
+                    <Skeleton className="h-4 bg-gray-200 rounded w-1/2" />
+                    <Skeleton className="h-3 bg-gray-200 rounded w-3/4" />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              supportCategories.map((cat) => (
+                <div
+                  key={cat.supportTypeID}
+                  className="border rounded-lg p-4 bg-gray-50"
+                >
+                  <div className="font-medium">{cat.name}</div>
+                  <div className="text-sm text-gray-500">{cat.description}</div>
+                </div>
+              ))
+            )}
+          </ScrollArea>
+        </div>
+  )
 
   return (
     <div className="p-6 w-full min-w-[80vw] mx-auto">
@@ -115,32 +143,9 @@ export function SupportTypePage() {
             {submitting ? "Đang thêm..." : "Thêm danh mục"}
           </button>
         </div>
+        {renderSupportType()}
 
-        <div className="space-y-3 border rounded-lg p-4 shadow-sm bg-white">
-          <h2 className="text-lg font-semibold mb-3">Danh sách danh mục hiện có</h2>
-          <ScrollArea className="h-[500px] pr-3">
-            {loading ? (
-              <div className="flex flex-col gap-4">
-                {[...Array(5)].map((_, idx) => (
-                  <div key={idx} className="border rounded-lg p-4 shadow animate-pulse space-y-2">
-                    <Skeleton className="h-4 bg-gray-200 rounded w-1/2" />
-                    <Skeleton className="h-3 bg-gray-200 rounded w-3/4" />
-                  </div>
-                ))}
-              </div>
-            ) : (
-              supportCategories.map((cat) => (
-                <div
-                  key={cat.supportTypeID}
-                  className="border rounded-lg p-4 bg-gray-50"
-                >
-                  <div className="font-medium">{cat.name}</div>
-                  <div className="text-sm text-gray-500">{cat.description}</div>
-                </div>
-              ))
-            )}
-          </ScrollArea>
-        </div>
+
       </div>
     </div>
   )

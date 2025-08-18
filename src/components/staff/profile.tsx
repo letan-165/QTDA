@@ -36,7 +36,6 @@ export function ProfilePage() {
     },
   })
 
-  // Tải thông tin người dùng
   const loadUser = async () => {
     try {
       setLoading(true)

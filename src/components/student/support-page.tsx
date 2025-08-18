@@ -82,27 +82,8 @@ export function RequestPage() {
       setSubmitting(false)
     }
   }
-
-  return (
-    <div className="p-6 w-full min-w-[80vw] mx-auto">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Yêu cầu hỗ trợ</h1>
-      </div>
-      <Breadcrumb className="border-b border-gray-200 pb-2 mb-6">
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/dashboard/student">Trang chủ</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator><SlashIcon /></BreadcrumbSeparator>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/dashboard/student/supports/request">Tạo hỗ trợ</BreadcrumbLink>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Cột trái: Danh mục */}
-        <div className="space-y-3">
+   const renderSupportType = () =>(
+            <div className="space-y-3">
           <h2 className="text-lg font-semibold">Chọn danh mục hỗ trợ</h2>
           <p className="text-sm text-gray-500">Chọn danh mục phù hợp với vấn đề của bạn</p>
           <ScrollArea className="h-[500px] pr-3">
@@ -135,6 +116,30 @@ export function RequestPage() {
             )}
           </ScrollArea>
         </div>
+    
+  )
+
+  return (
+    <div className="p-6 w-full min-w-[80vw] mx-auto">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Yêu cầu hỗ trợ</h1>
+      </div>
+      <Breadcrumb className="border-b border-gray-200 pb-2 mb-6">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/dashboard/student">Trang chủ</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator><SlashIcon /></BreadcrumbSeparator>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/dashboard/student/supports/request">Tạo hỗ trợ</BreadcrumbLink>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Cột trái: Danh mục */}
+
+        {renderSupportType()}
 
         {/* Cột phải: Form */}
         <div className="space-y-4 max-w-2xl">
