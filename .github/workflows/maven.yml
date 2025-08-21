@@ -26,7 +26,7 @@ jobs:
       - name: Build and push QTDA image
         uses: docker/build-push-action@v5
         with:
-          context: ./QTDA
-          file: ./QTDA/Dockerfile
+          context: .
+          file: ./Dockerfile
           push: true
           tags: ghcr.io/${{ github.repository_owner }}/qtda:latest
