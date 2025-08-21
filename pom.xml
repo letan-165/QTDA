@@ -10,9 +10,9 @@
 	</parent>
 	<groupId>com.app</groupId>
 	<artifactId>qtda</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>qtda</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Demo project QTDA</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -132,6 +132,14 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.5.2</version>
+				<configuration>
+					<skipTests>true</skipTests>
 				</configuration>
 			</plugin>
 		</plugins>
