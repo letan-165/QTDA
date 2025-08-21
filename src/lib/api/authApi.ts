@@ -34,12 +34,14 @@ export function handleLogin(accessToken: string, router: AppRouterInstance) {
     sameSite: "Strict",
   });
 
+  {/*
   if (Date.now() >= expiresDate.getTime()) {
     Cookies.remove("access_token");
     Cookies.remove("userId");
     router.push("/auth/login");
     return;
   }
+    */}
 
   switch (role) {
     case "ADMIN":
@@ -56,7 +58,11 @@ export function handleLogin(accessToken: string, router: AppRouterInstance) {
   }
 }
 
-export async function loginApi(username: string,password: string,router: AppRouterInstance): Promise<void> {
+export async function loginApi(
+  username: string,
+  password: string,
+  router: AppRouterInstance
+): Promise<void> {
   const res = await fetch("http://localhost:8080/api/auth/public/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -64,21 +70,42 @@ export async function loginApi(username: string,password: string,router: AppRout
   });
 
   if (!res.ok) {
-    let errMsg = "Đăng nhập thất bại";
-    try {
-      const contentType = res.headers.get("content-type") || "";
-      if (contentType.includes("application/json")) {
-        const errData = await res.json();
-        if (errData.error) errMsg = errData.error;
-      } else {
-        errMsg = await res.text();
-      }
-    } catch {
-    }
-    throw new Error(errMsg);
+    throw new Error("Sai tên đăng nhập hoặc mật khẩu!");
   }
 
   const data = await res.json();
   const token = data.result;
   handleLogin(token, router);
+}
+
+export async function sendResetPasswordApi(data: {
+  username: string
+  email: string
+  password: string
+  otp: number
+}): Promise<void> {
+  const res = await fetch("http://localhost:8080/api/auth/public/forgot", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  })
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}))
+    throw new Error(err.message || "Đặt lại mật khẩu thất bại")
+  }
+}
+
+export async function sendOTP(
+  email: string
+): Promise<void> {
+  const res = await fetch("http://localhost:8080/api/otp/public", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email}),
+  });
+
+  if (!res.ok) {
+    throw new Error("Đặt lại mật khẩu thất bại!");
+  }
 }

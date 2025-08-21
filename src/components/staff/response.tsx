@@ -19,11 +19,11 @@ export function ResponsePage() {
   const [error, setError] = useState("")
   const [searchQuery, setSearchQuery] = useState("")
   const [filterStatus, setFilterStatus] = useState("All")
-  const [filterSupportType, setFilterSupportType] = useState("All") // Lọc theo supportType
+  const [filterSupportType, setFilterSupportType] = useState("All")
   const [sortByTime, setSortByTime] = useState("newest")
   const [sortBySupportType, setSortBySupportType] = useState("asc")
   const [feedbacks, setFeedbacks] = useState<SupportItem[]>([])
-  const [supportTypes, setSupportTypes] = useState<TypeReponse[]>([]) // Lưu danh sách supportType
+  const [supportTypes, setSupportTypes] = useState<TypeReponse[]>([]) 
   const [selectedFeedback, setSelectedFeedback] = useState<SupportItem | null>(null)
   const [responseContent, setResponseContent] = useState("")
 

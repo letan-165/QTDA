@@ -69,7 +69,6 @@ const settingsItem = {
   icon: Settings,
   subItems: [
     { title: "Thông tin cá nhân", url: "/dashboard/student/profile" },
-    { title: "Đổi mật khẩu", url: "/auth/reset-password" },
     { title: "Đăng xuất", logout: true },
   ],
 }

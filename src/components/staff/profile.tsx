@@ -147,8 +147,8 @@ export function ProfilePage() {
 
       {loading ? (
         <div className="flex flex-col gap-4">
-          {[...Array(8)].map((_, idx) => (
-            <div key={idx} className="border rounded-lg p-4 shadow animate-pulse space-y-2">
+          {[...Array(6)].map((_, idx) => (
+            <div key={idx}>
               <Skeleton className="h-4 bg-gray-200 rounded w-3/4" />
             </div>
           ))}
@@ -214,8 +214,8 @@ export function ProfilePage() {
                 <div>
                   <Label htmlFor="dateOfBirth">Vị trí</Label>
                   <Input
-                    id="dateOfBirth"
-                    name="dateOfBirth"
+                    id="position"
+                    name="position"
                     value={updatedUser.staff.position}
                     onChange={handleInputChange}
                     required
@@ -254,6 +254,10 @@ export function ProfilePage() {
                   <tr>
                     <td className="border px-4 py-2 font-semibold">Email</td>
                     <td className="border px-4 py-2">{user.staff.email}</td>
+                  </tr>
+                   <tr>
+                    <td className="border px-4 py-2 font-semibold">Vị trí</td>
+                    <td className="border px-4 py-2">{user.staff.position}</td>
                   </tr>
                 </>
               )}

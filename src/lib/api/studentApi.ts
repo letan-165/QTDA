@@ -3,7 +3,7 @@ import { ScholarshipRegistration } from "./scholarshipApi"
 
 import { getUserData } from "./userApi"
 
-export async function fetchStudentFullName(): Promise<string> {
+export async function fetchFullName(): Promise<string> {
   try {
     const { fullName } = await getUserData()
     if (!fullName) throw new Error("thiếu fullName")

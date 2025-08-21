@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { 
   fetchStudentRegistrationsCount, 
-  fetchStudentFullName, 
+  fetchFullName, 
   fetchStudentSupportRequests, 
   countNotifications,
   fetchUpcomingEvents,
@@ -47,7 +47,7 @@ export function DashboardStudent() {
         events 
       ] = await Promise.all([
         fetchStudentRegistrationsCount(),
-        fetchStudentFullName(),
+        fetchFullName(),
         fetchStudentSupportRequests(),
         countNotifications(),
         fetchRecentActivities(),

@@ -16,7 +16,7 @@ import {
   fetchSupportType, 
   createSupportRequest, 
   TypeReponse, 
-  fetchStudentFullName,
+  fetchFullName,
   fetchStudentID 
 } from "@/lib/api/studentApi"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -44,7 +44,7 @@ export function RequestPage() {
     setLoading(true)
     const [supportTypes, fullName, studentID] = await Promise.all([
       fetchSupportType(),
-      fetchStudentFullName(),
+      fetchFullName(),
       fetchStudentID(),
     ])
     setSupportCategories(supportTypes)

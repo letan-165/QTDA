@@ -55,7 +55,7 @@ export async function getUserData() {
 
 
 export async function createResponse(
-  data: Omit<CreateResponseInput, "staffID"> // bỏ staffID khỏi input
+  data: Omit<CreateResponseInput, "staffID"> 
 ): Promise<SupportItem> {
   try {
     const staff = await getUserData()
