@@ -36,6 +36,10 @@ export function ProfilePage() {
     },
   })
 
+  useEffect(() => {
+    loadUser()
+  }, [])
+
   const loadUser = async () => {
     try {
       setLoading(true)
@@ -50,10 +54,10 @@ export function ProfilePage() {
         password: "",
         confirmPassword: "",
         role: detail.role,
-        fullName: detail.staff?.fullName  || "",
-        email: detail.staff?.email ||  "",
+        fullName: detail.staff?.fullName || "",
+        email: detail.staff?.email || "",
         phone: detail.staff?.phone || "",
-        staff :{
+        staff: {
           position: detail.staff?.position || ""
         },
       })
@@ -64,10 +68,6 @@ export function ProfilePage() {
       setLoading(false)
     }
   }
-
-  useEffect(() => {
-    loadUser()
-  }, [])
 
   const handleUpdateUser = async () => {
     if (updatedUser.password.trim() && updatedUser.password.length < 6) {
@@ -108,19 +108,127 @@ export function ProfilePage() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    if (name in updatedUser.staff) {
+    if (name === "position") {
       setUpdatedUser((prev) => ({
         ...prev,
-        student: { ...prev.staff, [name]: value },
+        staff: { ...prev.staff, position: value },
       }))
     } else {
       setUpdatedUser((prev) => ({ ...prev, [name]: value }))
     }
   }
 
+  const renderUserTable = () => (
+    <table className="min-w-full border border-gray-200 rounded-lg overflow-hidden">
+      <tbody>
+        <tr>
+          <td className="border px-4 py-2 font-semibold">Username</td>
+          <td className="border px-4 py-2">{user?.username}</td>
+        </tr>
+        <tr>
+          <td className="border px-4 py-2 font-semibold">Vai trò</td>
+          <td className="border px-4 py-2">{user?.role}</td>
+        </tr>
+        {user?.role === "STAFF" && user.staff && (
+          <>
+            <tr>
+              <td className="border px-4 py-2 font-semibold">Họ tên</td>
+              <td className="border px-4 py-2">{user.staff.fullName}</td>
+            </tr>
+            <tr>
+              <td className="border px-4 py-2 font-semibold">SĐT</td>
+              <td className="border px-4 py-2">{user.staff.phone}</td>
+            </tr>
+            <tr>
+              <td className="border px-4 py-2 font-semibold">Email</td>
+              <td className="border px-4 py-2">{user.staff.email}</td>
+            </tr>
+            <tr>
+              <td className="border px-4 py-2 font-semibold">Vị trí</td>
+              <td className="border px-4 py-2">{user.staff.position}</td>
+            </tr>
+          </>
+        )}
+      </tbody>
+    </table>
+  )
+
+  const renderEditForm = () => (
+    <form onSubmit={(e) => { e.preventDefault(); handleUpdateUser(); }} className="space-y-4 max-w-lg">
+      <div>
+        <Label htmlFor="fullName">Họ tên</Label>
+        <Input
+          id="fullName"
+          name="fullName"
+          value={updatedUser.fullName}
+          onChange={handleInputChange}
+          required
+        />
+      </div>
+      <div>
+        <Label htmlFor="email">Email</Label>
+        <Input
+          id="email"
+          name="email"
+          type="email"
+          value={updatedUser.email}
+          onChange={handleInputChange}
+          required
+        />
+      </div>
+      <div>
+        <Label htmlFor="phone">SĐT</Label>
+        <Input
+          id="phone"
+          name="phone"
+          value={updatedUser.phone}
+          onChange={handleInputChange}
+          required
+        />
+      </div>
+      <div>
+        <Label htmlFor="password">Mật khẩu</Label>
+        <Input
+          id="password"
+          name="password"
+          type="password"
+          value={updatedUser.password}
+          onChange={handleInputChange}
+        />
+      </div>
+      <div>
+        <Label htmlFor="confirmPassword">Xác nhận mật khẩu</Label>
+        <Input
+          id="confirmPassword"
+          name="confirmPassword"
+          type="password"
+          value={updatedUser.confirmPassword}
+          onChange={handleInputChange}
+        />
+      </div>
+      {user?.role === "STAFF" && (
+        <div>
+          <Label htmlFor="position">Vị trí</Label>
+          <Input
+            id="position"
+            name="position"
+            value={updatedUser.staff.position}
+            onChange={handleInputChange}
+            required
+          />
+        </div>
+      )}
+      <div className="flex gap-2">
+        <Button type="submit">Lưu</Button>
+        <Button type="button" variant="outline" onClick={() => setIsEditing(false)}>
+          Hủy
+        </Button>
+      </div>
+    </form>
+  )
+
   return (
     <div className="p-6 w-full min-w-[80vw] mx-auto">
-      {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Thông tin cá nhân</h1>
         {!isEditing && (
@@ -128,7 +236,6 @@ export function ProfilePage() {
         )}
       </div>
 
-      {/* Breadcrumb */}
       <Breadcrumb className="border-b border-gray-200 pb-2 mb-6">
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -156,114 +263,7 @@ export function ProfilePage() {
       ) : error ? (
         <p className="text-red-500">{error}</p>
       ) : user ? (
-        isEditing ? (
-          <form onSubmit={(e) => { e.preventDefault(); handleUpdateUser(); }} className="space-y-4 max-w-lg">
-            <div>
-              <Label htmlFor="fullName">Họ tên</Label>
-              <Input
-                id="fullName"
-                name="fullName"
-                value={updatedUser.fullName}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                value={updatedUser.email}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="phone">SĐT</Label>
-              <Input
-                id="phone"
-                name="phone"
-                value={updatedUser.phone}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="password">Mật khẩu</Label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                value={updatedUser.password}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div>
-              <Label htmlFor="confirmPassword">Xác nhận mật khẩu</Label>
-              <Input
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                value={updatedUser.confirmPassword}
-                onChange={handleInputChange}
-              />
-            </div>
-            {user.role === "STAFF" && (
-              <>
-                <div>
-                  <Label htmlFor="dateOfBirth">Vị trí</Label>
-                  <Input
-                    id="position"
-                    name="position"
-                    value={updatedUser.staff.position}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-              </>
-            )}
-            <div className="flex gap-2">
-              <Button type="submit">Lưu</Button>
-              <Button type="button" variant="outline" onClick={() => setIsEditing(false)}>
-                Hủy
-              </Button>
-            </div>
-          </form>
-        ) : (
-          <table className="min-w-full border border-gray-200 rounded-lg overflow-hidden">
-            <tbody>
-              <tr>
-                <td className="border px-4 py-2 font-semibold">Username</td>
-                <td className="border px-4 py-2">{user.username}</td>
-              </tr>
-              <tr>
-                <td className="border px-4 py-2 font-semibold">Vai trò</td>
-                <td className="border px-4 py-2">{user.role}</td>
-              </tr>
-              {user.role === "STAFF" && user.staff && (
-                <>
-                  <tr>
-                    <td className="border px-4 py-2 font-semibold">Họ tên</td>
-                    <td className="border px-4 py-2">{user.staff.fullName}</td>
-                  </tr>
-                  <tr>
-                    <td className="border px-4 py-2 font-semibold">SĐT</td>
-                    <td className="border px-4 py-2">{user.staff.phone}</td>
-                  </tr>
-                  <tr>
-                    <td className="border px-4 py-2 font-semibold">Email</td>
-                    <td className="border px-4 py-2">{user.staff.email}</td>
-                  </tr>
-                   <tr>
-                    <td className="border px-4 py-2 font-semibold">Vị trí</td>
-                    <td className="border px-4 py-2">{user.staff.position}</td>
-                  </tr>
-                </>
-              )}
-            </tbody>
-          </table>
-        )
+        isEditing ? renderEditForm() : renderUserTable()
       ) : (
         <p>Không có dữ liệu</p>
       )}

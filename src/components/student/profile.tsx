@@ -38,7 +38,10 @@ export function ProfilePage() {
     },
   })
 
-  // Tải thông tin người dùng
+  useEffect(() => {
+    loadUser()
+  }, [])
+
   const loadUser = async () => {
     try {
       setLoading(true)
@@ -53,8 +56,8 @@ export function ProfilePage() {
         password: "",
         confirmPassword: "",
         role: detail.role,
-        fullName: detail.student?.fullName  || "",
-        email: detail.student?.email ||  "",
+        fullName: detail.student?.fullName || "",
+        email: detail.student?.email || "",
         phone: detail.student?.phone || "",
         student: {
           dateOfBirth: detail.student?.dateOfBirth || "",
@@ -69,10 +72,6 @@ export function ProfilePage() {
       setLoading(false)
     }
   }
-
-  useEffect(() => {
-    loadUser()
-  }, [])
 
   const handleUpdateUser = async () => {
     if (updatedUser.password.trim() && updatedUser.password.length < 6) {
@@ -115,7 +114,7 @@ export function ProfilePage() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    if (name in updatedUser.student) {
+    if (["dateOfBirth", "gender", "className"].includes(name)) {
       setUpdatedUser((prev) => ({
         ...prev,
         student: { ...prev.student, [name]: value },
@@ -125,9 +124,147 @@ export function ProfilePage() {
     }
   }
 
+  const renderUserTable = () => (
+    <table className="min-w-full border border-gray-200 rounded-lg overflow-hidden">
+      <tbody>
+        <tr>
+          <td className="border px-4 py-2 font-semibold">Username</td>
+          <td className="border px-4 py-2">{user?.username}</td>
+        </tr>
+        <tr>
+          <td className="border px-4 py-2 font-semibold">Vai trò</td>
+          <td className="border px-4 py-2">{user?.role}</td>
+        </tr>
+        {user?.role === "STUDENT" && user.student && (
+          <>
+            <tr>
+              <td className="border px-4 py-2 font-semibold">Họ tên</td>
+              <td className="border px-4 py-2">{user.student.fullName}</td>
+            </tr>
+            <tr>
+              <td className="border px-4 py-2 font-semibold">Ngày sinh</td>
+              <td className="border px-4 py-2">{user.student.dateOfBirth}</td>
+            </tr>
+            <tr>
+              <td className="border px-4 py-2 font-semibold">Giới tính</td>
+              <td className="border px-4 py-2">{user.student.gender}</td>
+            </tr>
+            <tr>
+              <td className="border px-4 py-2 font-semibold">Lớp</td>
+              <td className="border px-4 py-2">{user.student.className}</td>
+            </tr>
+            <tr>
+              <td className="border px-4 py-2 font-semibold">SĐT</td>
+              <td className="border px-4 py-2">{user.student.phone}</td>
+            </tr>
+            <tr>
+              <td className="border px-4 py-2 font-semibold">Email</td>
+              <td className="border px-4 py-2">{user.student.email}</td>
+            </tr>
+          </>
+        )}
+      </tbody>
+    </table>
+  )
+
+  const renderEditForm = () => (
+    <form onSubmit={(e) => { e.preventDefault(); handleUpdateUser(); }} className="space-y-4 max-w-lg">
+      <div>
+        <Label htmlFor="fullName">Họ tên</Label>
+        <Input
+          id="fullName"
+          name="fullName"
+          value={updatedUser.fullName}
+          onChange={handleInputChange}
+          required
+        />
+      </div>
+      <div>
+        <Label htmlFor="email">Email</Label>
+        <Input
+          id="email"
+          name="email"
+          type="email"
+          value={updatedUser.email}
+          onChange={handleInputChange}
+          required
+        />
+      </div>
+      <div>
+        <Label htmlFor="phone">SĐT</Label>
+        <Input
+          id="phone"
+          name="phone"
+          value={updatedUser.phone}
+          onChange={handleInputChange}
+          required
+        />
+      </div>
+      <div>
+        <Label htmlFor="password">Mật khẩu</Label>
+        <Input
+          id="password"
+          name="password"
+          type="password"
+          value={updatedUser.password}
+          onChange={handleInputChange}
+        />
+      </div>
+      <div>
+        <Label htmlFor="confirmPassword">Xác nhận mật khẩu</Label>
+        <Input
+          id="confirmPassword"
+          name="confirmPassword"
+          type="password"
+          value={updatedUser.confirmPassword}
+          onChange={handleInputChange}
+        />
+      </div>
+      {user?.role === "STUDENT" && (
+        <>
+          <div>
+            <Label htmlFor="dateOfBirth">Ngày sinh</Label>
+            <Input
+              id="dateOfBirth"
+              name="dateOfBirth"
+              value={updatedUser.student.dateOfBirth}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          <div>
+            <Label htmlFor="gender">Giới tính</Label>
+            <Input
+              id="gender"
+              name="gender"
+              value={updatedUser.student.gender}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          <div>
+            <Label htmlFor="className">Lớp</Label>
+            <Input
+              id="className"
+              name="className"
+              value={updatedUser.student.className}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+        </>
+      )}
+      <div className="flex gap-2">
+        <Button type="submit">Lưu</Button>
+        <Button type="button" variant="outline" onClick={() => setIsEditing(false)}>
+          Hủy
+        </Button>
+      </div>
+    </form>
+  )
+
   return (
     <div className="p-6 w-full min-w-[80vw] mx-auto">
-      {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Thông tin cá nhân</h1>
         {!isEditing && (
@@ -135,7 +272,6 @@ export function ProfilePage() {
         )}
       </div>
 
-      {/* Breadcrumb */}
       <Breadcrumb className="border-b border-gray-200 pb-2 mb-6">
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -163,142 +299,7 @@ export function ProfilePage() {
       ) : error ? (
         <p className="text-red-500">{error}</p>
       ) : user ? (
-        isEditing ? (
-          <form onSubmit={(e) => { e.preventDefault(); handleUpdateUser(); }} className="space-y-4 max-w-lg">
-            <div>
-              <Label htmlFor="fullName">Họ tên</Label>
-              <Input
-                id="fullName"
-                name="fullName"
-                value={updatedUser.fullName}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                value={updatedUser.email}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="phone">SĐT</Label>
-              <Input
-                id="phone"
-                name="phone"
-                value={updatedUser.phone}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="password">Mật khẩu</Label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                value={updatedUser.password}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div>
-              <Label htmlFor="confirmPassword">Xác nhận mật khẩu</Label>
-              <Input
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                value={updatedUser.confirmPassword}
-                onChange={handleInputChange}
-              />
-            </div>
-            {user.role === "STUDENT" && (
-              <>
-                <div>
-                  <Label htmlFor="dateOfBirth">Ngày sinh</Label>
-                  <Input
-                    id="dateOfBirth"
-                    name="dateOfBirth"
-                    value={updatedUser.student.dateOfBirth}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="gender">Giới tính</Label>
-                  <Input
-                    id="gender"
-                    name="gender"
-                    value={updatedUser.student.gender}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="className">Lớp</Label>
-                  <Input
-                    id="className"
-                    name="className"
-                    value={updatedUser.student.className}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-              </>
-            )}
-            <div className="flex gap-2">
-              <Button type="submit">Lưu</Button>
-              <Button type="button" variant="outline" onClick={() => setIsEditing(false)}>
-                Hủy
-              </Button>
-            </div>
-          </form>
-        ) : (
-          <table className="min-w-full border border-gray-200 rounded-lg overflow-hidden">
-            <tbody>
-              <tr>
-                <td className="border px-4 py-2 font-semibold">Username</td>
-                <td className="border px-4 py-2">{user.username}</td>
-              </tr>
-              <tr>
-                <td className="border px-4 py-2 font-semibold">Vai trò</td>
-                <td className="border px-4 py-2">{user.role}</td>
-              </tr>
-              {user.role === "STUDENT" && user.student && (
-                <>
-                  <tr>
-                    <td className="border px-4 py-2 font-semibold">Họ tên</td>
-                    <td className="border px-4 py-2">{user.student.fullName}</td>
-                  </tr>
-                  <tr>
-                    <td className="border px-4 py-2 font-semibold">Ngày sinh</td>
-                    <td className="border px-4 py-2">{user.student.dateOfBirth}</td>
-                  </tr>
-                  <tr>
-                    <td className="border px-4 py-2 font-semibold">Giới tính</td>
-                    <td className="border px-4 py-2">{user.student.gender}</td>
-                  </tr>
-                  <tr>
-                    <td className="border px-4 py-2 font-semibold">Lớp</td>
-                    <td className="border px-4 py-2">{user.student.className}</td>
-                  </tr>
-                  <tr>
-                    <td className="border px-4 py-2 font-semibold">SĐT</td>
-                    <td className="border px-4 py-2">{user.student.phone}</td>
-                  </tr>
-                  <tr>
-                    <td className="border px-4 py-2 font-semibold">Email</td>
-                    <td className="border px-4 py-2">{user.student.email}</td>
-                  </tr>
-                </>
-              )}
-            </tbody>
-          </table>
-        )
+        isEditing ? renderEditForm() : renderUserTable()
       ) : (
         <p>Không có dữ liệu</p>
       )}
