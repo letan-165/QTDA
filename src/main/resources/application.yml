@@ -8,10 +8,21 @@ spring:
   datasource:
     url: ${MYSQL_URL:jdbc:mysql://root:root@localhost:3306/QTDA}
     driver-class-name: com.mysql.cj.jdbc.Driver
+  data:
+    redis:
+      url: ${REDIS_URL:redis://localhost:6379}
   jpa:
     hibernate:
       ddl-auto: update
 
+app:
+  client:
+    smtp: https://api.brevo.com/v3/smtp
+    contact:
+      name: TPD University
+      email: tan.cloud.dev@gmail.com
+
 key:
-  value: ${KEY_JWT:XDHTTTQLHTSVTPD2025@TPD#SystemKey!}
+  jwt: ${KEY_JWT}
+  brevo: ${KEY_BREVO}
 

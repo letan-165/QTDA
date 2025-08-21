@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatusCode;
 @Getter
 @AllArgsConstructor
 public enum ErrorCode {
+    EMAIL_INVALID(1031, "Email verification is invalid", HttpStatus.BAD_REQUEST),
+    OTP_INVALID(1030, "Invalid otp authentication", HttpStatus.BAD_REQUEST),
     STUDENT_REGISTERED(1029,"Students who have applied for scholarships", HttpStatus.BAD_REQUEST),
     REGISTRATION_CANCELLED(1028,"Registration has been CANCELLED", HttpStatus.BAD_REQUEST),
     REGISTRATION_EXPIRED(1027,"Registration has been EXPIRED", HttpStatus.BAD_REQUEST),

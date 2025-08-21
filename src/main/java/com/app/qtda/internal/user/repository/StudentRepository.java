@@ -11,5 +11,6 @@ import java.util.Optional;
 @Repository
 public interface StudentRepository extends JpaRepository<Student,String> {
     Optional<Student> findByAccount_UserID(String userID);
+    boolean existsByEmail(String email);
     List<Student> findAllByAccount_UserIDIn(List<String>userIDs);
 }

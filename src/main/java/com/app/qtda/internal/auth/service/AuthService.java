@@ -3,10 +3,14 @@ package com.app.qtda.internal.auth.service;
 
 import com.app.qtda.common.exception.AppException;
 import com.app.qtda.common.exception.ErrorCode;
+import com.app.qtda.internal.auth.dto.request.ForgotPassRequest;
 import com.app.qtda.internal.auth.dto.request.LoginRequest;
 import com.app.qtda.internal.auth.dto.request.TokenRequest;
 import com.app.qtda.internal.auth.entity.Account;
 import com.app.qtda.internal.auth.repository.AccountRepository;
+import com.app.qtda.internal.otp.service.OtpService;
+import com.app.qtda.internal.user.repository.StaffRepository;
+import com.app.qtda.internal.user.repository.StudentRepository;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
@@ -35,7 +39,7 @@ import java.util.UUID;
 @Slf4j
 public class AuthService {
     @NonFinal
-    @Value("${key.value}")
+    @Value("${key.jwt}")
     String KEY;
 
     AccountRepository accountRepository;
@@ -43,7 +47,7 @@ public class AuthService {
 
     public String login(LoginRequest request) {
         Account Account = accountRepository.findByUsername(request.getUsername())
-                .orElseThrow(()->new AppException(ErrorCode.ACCOUNT_EXISTS));
+                .orElseThrow(()->new AppException(ErrorCode.ACCOUNT_NO_EXISTS));
 
         if (!passwordEncoder.matches(request.getPassword(),Account.getPassword()))
             throw new AppException(ErrorCode.PASSWORD_INVALID);
@@ -70,10 +74,30 @@ public class AuthService {
         } catch (ParseException e) {
             throw new AppException(ErrorCode.AUTHENTICATION);
         }
-
     }
 
-    public String generaToken(Account account){
+    StaffRepository staffRepository;
+    StudentRepository studentRepository;
+    OtpService otpService;
+    public void forgotPassword(ForgotPassRequest request) {
+        Account account = accountRepository.findByUsername(request.getUsername())
+                .orElseThrow(()->new AppException(ErrorCode.ACCOUNT_EXISTS));
+        String email = request.getEmail();
+        boolean checkEmail = false;
+        switch (account.getRole()){
+            case STUDENT -> checkEmail = studentRepository.existsByEmail(email);
+            case STAFF -> checkEmail = staffRepository.existsByEmail(email);
+        }
+
+        if(!checkEmail)
+            throw new AppException(ErrorCode.EMAIL_INVALID);
+
+        otpService.verify(email, request.getOtp());
+        account.setPassword(passwordEncoder.encode(request.getPassword()));
+        accountRepository.save(account);
+    }
+
+    String generaToken(Account account){
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
                 .jwtID(UUID.randomUUID().toString())
                 .issuer("QTDA")

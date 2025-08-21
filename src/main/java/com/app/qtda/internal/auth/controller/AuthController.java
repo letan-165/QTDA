@@ -2,6 +2,7 @@ package com.app.qtda.internal.auth.controller;
 
 
 import com.app.qtda.common.ApiResponse;
+import com.app.qtda.internal.auth.dto.request.ForgotPassRequest;
 import com.app.qtda.internal.auth.dto.request.LoginRequest;
 import com.app.qtda.internal.auth.dto.request.TokenRequest;
 import com.app.qtda.internal.auth.service.AuthService;
@@ -41,7 +42,11 @@ public class AuthController {
                 .build();
      }
 
-
-
-
+    @PutMapping("/public/forgot")
+    public ApiResponse<?> forgotPassword(@RequestBody ForgotPassRequest request){
+        authService.forgotPassword(request);
+        return ApiResponse.builder()
+                .message("Password change successful")
+                .build();
+    }
 }
