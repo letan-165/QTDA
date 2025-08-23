@@ -89,8 +89,12 @@ export function AccountPage() {
       const data = await fetchAllUsers()
       setUsers(data)
       setCurrentPage(1)
-    } catch (err: any) {
-      setError(err.message)
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message)
+      } else {
+        setError("Lỗi tải dữ liệu người dùng.")
+      }
       toast.error("Lỗi tải dữ liệu người dùng.")
     } finally {
       setLoading(false)
@@ -121,8 +125,12 @@ export function AccountPage() {
           className: "",
         },
       })
-    } catch (err: any) {
-      toast.error(err.message || "Đăng ký người dùng thất bại.")
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        toast.error(err.message || "Đăng ký người dùng thất bại.")
+      } else {
+        toast.error("Đăng ký người dùng thất bại.")
+      }
     }
   }
 
@@ -135,8 +143,12 @@ export function AccountPage() {
         setCurrentPage(totalPages)
       }
       toast.success(`Đã xoá người dùng có ID: ${id}`)
-    } catch (err: any) {
-      toast.error(err.message || "Xoá người dùng thất bại.")
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        toast.error(err.message || "Xoá người dùng thất bại.")
+      } else {
+        toast.error("Xoá người dùng thất bại.")
+      }
     }
   }
 
@@ -145,12 +157,12 @@ export function AccountPage() {
       const detail = await fetchUserDetail(userID)
       setSelectedUser(detail)
       setShowDetailDialog(true)
-    } catch (err: any) {
+    } catch {
       toast.error("Không thể tải chi tiết người dùng")
     }
   }
 
-  function parseExcelDate(dateValue: any): string {
+  function parseExcelDate(dateValue: unknown): string {
     if (typeof dateValue === "number") {
       const date = XLSX.SSF.parse_date_code(dateValue)
       const year = date.y
@@ -178,7 +190,7 @@ export function AccountPage() {
       const workbook = XLSX.read(arrayBuffer, { type: "array" })
       const sheetName = workbook.SheetNames[0]
       const sheet = workbook.Sheets[sheetName]
-      const data = XLSX.utils.sheet_to_json(sheet) as any[]
+      const data = XLSX.utils.sheet_to_json(sheet) as Record<string, unknown>[]
 
       const importedUsers: NewUser[] = data.map((row) => {
         const user: NewUser = {
@@ -219,8 +231,12 @@ export function AccountPage() {
       await signUpUsers(importedUsers)
       await loadUsers()
       toast.success(`Nhập ${importedUsers.length} người dùng từ Excel thành công!`)
-    } catch (err: any) {
-      toast.error(err.message || "Nhập file Excel thất bại.")
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        toast.error(err.message || "Nhập file Excel thất bại.")
+      } else {
+        toast.error("Nhập file Excel thất bại.")
+      }
     } finally {
       setLoading(false)
       event.target.value = ""
@@ -589,3 +605,4 @@ export function AccountPage() {
     </div>
   )
 }
+

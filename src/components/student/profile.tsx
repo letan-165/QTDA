@@ -65,8 +65,12 @@ export function ProfilePage() {
           className: detail.student?.className || "",
         },
       })
-    } catch (err: any) {
-      setError(err.message || "Không thể tải thông tin người dùng")
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message || "Không thể tải thông tin người dùng")
+      } else {
+        setError("Không thể tải thông tin người dùng")
+      }
       toast.error("Không thể tải thông tin người dùng")
     } finally {
       setLoading(false)
@@ -107,8 +111,12 @@ export function ProfilePage() {
       setIsEditing(false)
       setUpdatedUser((prev) => ({ ...prev, password: "", confirmPassword: "" }))
       await loadUser()
-    } catch (err: any) {
-      toast.error(err.message || "Cập nhật thông tin thất bại.")
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        toast.error(err.message || "Cập nhật thông tin thất bại.")
+      } else {
+        toast.error("Cập nhật thông tin thất bại.")
+      }
     }
   }
 

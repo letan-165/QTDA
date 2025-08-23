@@ -1,5 +1,3 @@
-"use client"
-import { withAuth } from "@/components/auth/withAuth"
 import { RequestPage } from "@/components/student/support-page"
 
 export default function Page() {

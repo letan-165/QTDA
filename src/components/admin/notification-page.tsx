@@ -1,9 +1,8 @@
 "use client"
 
-import { useEffect, useState, ChangeEvent } from "react"
-import { addNotification, fetchNotifications, AddNotification, NotificationItem, deleteNotification } from "@/lib/api/notificationApi"
+import { useEffect, useState } from "react"
+import { fetchNotifications, NotificationItem, deleteNotification } from "@/lib/api/notificationApi"
 import { toast } from "sonner"
-import * as XLSX from "xlsx"
 
 import {
   Breadcrumb,
@@ -12,7 +11,7 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
-import { SlashIcon, ChevronsUpDownIcon, TrashIcon, PencilIcon, EyeIcon } from "lucide-react"
+import { SlashIcon, ChevronsUpDownIcon, TrashIcon } from "lucide-react"
 
 import {
   DropdownMenu,
@@ -41,9 +40,14 @@ export function NotificationPage() {
       setLoading(true)
       const data = await fetchNotifications()
       setNotice(data)
-    } catch (err: any) {
-      setError(err.message)
-      toast.error("Lỗi khi tải thông báo.")
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message)
+        toast.error("Lỗi khi tải thông báo.")
+      } else {
+        setError("Lỗi không xác định")
+        toast.error("Lỗi khi tải thông báo.")
+      }
     } finally {
       setLoading(false)
     }
@@ -54,8 +58,12 @@ export function NotificationPage() {
       await deleteNotification([id])
       setNotice(notices.filter((u) => u.notificationID !== id))
       toast.success(`Đã xoá thông báo có id: ${id}`)
-    } catch (err: any) {
-      toast.error(err.message || "Xoá thông báo thất bại.")
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        toast.error(err.message || "Xoá thông báo thất bại.")
+      } else {
+        toast.error("Xoá thông báo thất bại.")
+      }
     }
   }
 

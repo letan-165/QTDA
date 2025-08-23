@@ -1,17 +1,15 @@
 
 "use client"
 
-import { useEffect, useState, ChangeEvent } from "react"
+import { useEffect, useState } from "react"
 import { fetchNotifications,  NotificationItem } from "@/lib/api/notificationApi"
 import { toast } from "sonner"
-import * as XLSX from "xlsx"
 
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import { SlashIcon, ChevronsUpDownIcon,  } from "lucide-react"
@@ -40,18 +38,22 @@ export function NotificationPage() {
     loadNotification()
   }, [])
 
-  const loadNotification = async () => {
-    try {
-      setLoading(true)
-      const data = await fetchNotifications()
-      setNotice(data)
-    } catch (err: any) {
-      setError(err.message)
-      toast.error("Lỗi khi tải thông báo.")
-    } finally {
-      setLoading(false)
+    const loadNotification = async () => {
+      try {
+        setLoading(true)
+        const data = await fetchNotifications()
+        setNotice(data)
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message)
+        } else {
+          setError("Lỗi khi tải thông báo.")
+        }
+        toast.error("Lỗi khi tải thông báo.")
+      } finally {
+        setLoading(false)
       }
-    }
+}
 
 const filteredNotice = notices
   .filter((notice) => {

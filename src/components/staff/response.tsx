@@ -21,13 +21,13 @@ export function ResponsePage() {
   const [filterStatus, setFilterStatus] = useState("All")
   const [filterSupportType, setFilterSupportType] = useState("All")
   const [sortByTime, setSortByTime] = useState("newest")
-  const [sortBySupportType, setSortBySupportType] = useState("asc")
+  const [sortBySupportType] = useState("asc")
   const [feedbacks, setFeedbacks] = useState<SupportItem[]>([])
   const [supportTypes, setSupportTypes] = useState<TypeReponse[]>([]) 
   const [selectedFeedback, setSelectedFeedback] = useState<SupportItem | null>(null)
   const [responseContent, setResponseContent] = useState("")
 
-  useEffect(() => {
+      useEffect(() => {
     const loadData = async () => {
       try {
         setLoading(true)
@@ -38,8 +38,8 @@ export function ResponsePage() {
         ])
         setFeedbacks(feedbackData)
         setSupportTypes(supportTypeData)
-      } catch (err: any) {
-        setError(err.message || "Không thể tải dữ liệu")
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : "Không thể tải dữ liệu")
         toast.error("Lỗi khi tải dữ liệu")
       } finally {
         setLoading(false)
@@ -67,13 +67,13 @@ export function ResponsePage() {
       )
       setSelectedFeedback(updatedFeedback)
       setResponseContent("")
-    } catch (err: any) {
-      toast.error(err.message || "Gửi phản hồi thất bại")
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : "Gửi phản hồi thất bại")
     } finally {
       setSubmitting(false)
     }
   }
-
+  
   const handleChangeStatus = async (supportID: number, newStatus: "PENDING" | "COMPLETED") => {
     try {
       setSubmitting(true)
@@ -85,8 +85,8 @@ export function ResponsePage() {
       if (selectedFeedback?.supportID === supportID) {
         setSelectedFeedback({ ...selectedFeedback, status: newStatus })
       }
-    } catch (err: any) {
-      toast.error(err.message || "Cập nhật trạng thái thất bại")
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : "Cập nhật trạng thái thất bại")
     } finally {
       setSubmitting(false)
     }
@@ -150,50 +150,53 @@ export function ResponsePage() {
     </div>
   )
 
-  const renderSheet = () => (
-    <Sheet open={!!selectedFeedback} onOpenChange={() => setSelectedFeedback(null)}>
-      <SheetContent side="right" className="w-96 p-4">
-        <SheetHeader>
-          <SheetTitle>{selectedFeedback?.title}</SheetTitle>
-          <SheetDescription>{selectedFeedback?.content}</SheetDescription>
-        </SheetHeader>
-        <div className="space-y-2 text-sm text-gray-600 mt-4">
-          <div><b>Mã hỗ trợ:</b> {selectedFeedback?.supportID}</div>
-          <div><b>Loại hỗ trợ:</b> {selectedFeedback?.supportType?.name || "Chưa có"}</div>
-          <div><b>Nhân viên:</b> {selectedFeedback?.response?.staff?.fullName || "Chưa có"}</div>
-          <div>
-            <b>Ngày phản hồi:</b>{" "}
-            {selectedFeedback?.response?.createAt
-              ? new Date(selectedFeedback.response.createAt).toLocaleDateString("vi-VN")
-              : "Chưa có"}
-          </div>
-          <div>
-            <b>Nội dung phản hồi:</b>
-            <div className="mt-2 flex justify-start">
-              <div className="bg-blue-100 text-blue-800 px-4 py-3 rounded-2xl rounded-bl-sm shadow-sm max-w-[85%] leading-relaxed">
-                {selectedFeedback?.response?.content || "Chưa có phản hồi"}
-              </div>
+const renderSheet = () => (
+  <Sheet open={!!selectedFeedback} onOpenChange={() => setSelectedFeedback(null)}>
+    <SheetContent side="right" className="w-96 p-4">
+      <SheetHeader>
+        <SheetTitle>{selectedFeedback?.title}</SheetTitle>
+        <SheetDescription>{selectedFeedback?.content}</SheetDescription>
+      </SheetHeader>
+      <div className="space-y-2 text-sm text-gray-600 mt-4">
+        <div><b>Mã hỗ trợ:</b> {selectedFeedback?.supportID}</div>
+        <div><b>Loại hỗ trợ:</b> {selectedFeedback?.supportType?.name || "Chưa có"}</div>
+        <div><b>Nhân viên:</b> {selectedFeedback?.response?.staff?.fullName || "Chưa có"}</div>
+        <div>
+          <b>Ngày phản hồi:</b>{" "}
+          {selectedFeedback?.response?.createAt
+            ? new Date(selectedFeedback.response.createAt).toLocaleDateString("vi-VN")
+            : "Chưa có"}
+        </div>
+        <div>
+          <b>Nội dung phản hồi:</b>
+          <div className="mt-2 flex justify-start">
+            <div className="bg-blue-100 text-blue-800 px-4 py-3 rounded-2xl rounded-bl-sm shadow-sm max-w-[85%] leading-relaxed">
+              {selectedFeedback?.response?.content || "Chưa có phản hồi"}
             </div>
           </div>
         </div>
-        <div className="mt-4">
-          <DropdownMenu>
-            <DropdownMenuTrigger className="border px-3 py-2 rounded w-full text-left flex items-center justify-between gap-2">
-              <span>Trạng thái: {selectedFeedback?.status || "Chọn trạng thái"}</span>
-              <ChevronsUpDownIcon className="w-4 h-4 opacity-50" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuLabel>Thay đổi trạng thái</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => selectedFeedback && handleChangeStatus(selectedFeedback.supportID, "PENDING")}>
-                Chờ duyệt
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => selectedFeedback && handleChangeStatus(selectedFeedback.supportID, "COMPLETED")}>
-                Đã hoàn thành
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
+      </div>
+
+      <div className="mt-4">
+        <DropdownMenu>
+          <DropdownMenuTrigger className="border px-3 py-2 rounded w-full text-left flex items-center justify-between gap-2">
+            <span>Trạng thái: {selectedFeedback?.status || "Chọn trạng thái"}</span>
+            <ChevronsUpDownIcon className="w-4 h-4 opacity-50" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuLabel>Thay đổi trạng thái</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => selectedFeedback && handleChangeStatus(selectedFeedback.supportID, "PENDING")}>
+              Chờ duyệt
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => selectedFeedback && handleChangeStatus(selectedFeedback.supportID, "COMPLETED")}>
+              Đã hoàn thành
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+
+      {!selectedFeedback?.response && (
         <div className="mt-6 space-y-3">
           <Textarea
             placeholder="Nhập phản hồi..."
@@ -208,9 +211,11 @@ export function ResponsePage() {
             {submitting ? "Đang gửi..." : "Gửi phản hồi"}
           </Button>
         </div>
-      </SheetContent>
-    </Sheet>
-  )
+      )}
+    </SheetContent>
+  </Sheet>
+)
+
 
   return (
     <div className="p-6 w-full min-w-[80vw] mx-auto flex">

@@ -1,5 +1,3 @@
-"use client"
-import { withAuth } from "@/components/auth/withAuth"
 import { ProfilePage } from "@/components/staff/profile"
 
 export default function Page() {

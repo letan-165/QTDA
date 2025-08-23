@@ -15,7 +15,7 @@ import Link from "next/link"
 import { useState } from "react"
 import { sendResetPasswordApi } from "@/lib/api/authApi"
 import { toast } from "sonner"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useRouter } from "next/navigation"
 
 export function ResetPasswordWithCodeForm({
   className,
@@ -30,7 +30,7 @@ export function ResetPasswordWithCodeForm({
   const router = useRouter()
 
 
-  const handleSubmit = async (e: React.FormEvent) => {
+   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (newPassword !== confirmPassword) {
       toast.error("Mật khẩu xác nhận không khớp!")
@@ -47,8 +47,12 @@ export function ResetPasswordWithCodeForm({
       })
       toast.success("Đổi mật khẩu thành công! Vui lòng đăng nhập lại.")
       router.push("/auth/login")
-    } catch (err: any) {
-      toast.error(err.message || "Đặt lại mật khẩu thất bại!")
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        toast.error(err.message || "Đặt lại mật khẩu thất bại!")
+      } else {
+        toast.error("Đặt lại mật khẩu thất bại!")
+      }
     } finally {
       setLoading(false)
     }

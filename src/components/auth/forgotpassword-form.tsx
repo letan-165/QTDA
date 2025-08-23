@@ -33,8 +33,12 @@ export function ForgotPasswordForm({
       toast.success("Mã xác nhận đã được gửi đến email của bạn!")
 
       router.push("/auth/verify-code")
-    } catch (err: any) {
-      toast.error(err.message || "Yêu cầu đặt lại mật khẩu thất bại!")
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        toast.error(err.message || "Yêu cầu đặt lại mật khẩu thất bại!")
+      } else {
+        toast.error("Yêu cầu đặt lại mật khẩu thất bại!")
+      }
     } finally {
       setLoading(false)
     }

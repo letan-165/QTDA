@@ -11,7 +11,7 @@ import {
 } from "@/lib/api/studentApi"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { GraduationCap, Headphones, Bell, Calendar } from "lucide-react"
+import { GraduationCap, Headphones, Bell } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   Breadcrumb,
@@ -29,9 +29,8 @@ export function DashboardStudent() {
   const [fullName, setFullName] = useState("")
   const [requestCount, setRequestCount] = useState(0)
   const [notificationsCount, setNotificationsCount] = useState(0)
-  const [recentActivities, setRecentActivities] = useState<any[]>([]) 
-  const [upcomingEvents, setUpcomingEvents] = useState<any[]>([])
-
+  const [recentActivities, setRecentActivities] = useState<{ icon?: React.ReactNode; title: string; desc: string; time: string }[]>([])
+  const [upcomingEvents, setUpcomingEvents] = useState<{ title: string; date: string; time: string; location: string }[]>([])
 
   useEffect(() => {
     loadData()

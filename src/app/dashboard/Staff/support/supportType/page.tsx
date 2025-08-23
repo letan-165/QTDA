@@ -1,5 +1,3 @@
-"use client"
-import { withAuth } from "@/components/withAuth"
 import { SupportTypePage } from "@/components/staff/SupportType-page"
 
 export default function Page() {

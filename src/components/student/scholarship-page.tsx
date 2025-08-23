@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
-import { EyeIcon, SlashIcon, ChevronsUpDownIcon, Settings } from "lucide-react"
+import { SlashIcon, ChevronsUpDownIcon } from "lucide-react"
 
 import {
   Breadcrumb,
@@ -54,8 +54,12 @@ export function ScholarshipPage() {
       setLoading(true)
       const data = await fetchScholarshipRegistrationsByStudent()
       setRegistrations(data)
-    } catch (err: any) {
-      setError(err.message)
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message)
+      } else {
+        setError("Lỗi khi tải danh sách.")
+      }
       toast.error("Lỗi khi tải danh sách.")
     } finally {
       setLoading(false)
@@ -67,8 +71,12 @@ export function ScholarshipPage() {
       setLoadingNoti(true)
       const data = await fetchNotifications()
       setNotifications(data)
-    } catch (err: any) {
-      setError(err.message)
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message)
+      } else {
+        setError("Lỗi khi tải thông báo.")
+      }
       toast.error("Lỗi khi tải thông báo.")
     } finally {
       setLoadingNoti(false)
@@ -80,8 +88,12 @@ export function ScholarshipPage() {
       const result = await registerScholarship(scholarshipID)
       toast.success("Đăng ký học bổng thành công!")
       console.log(result)
-    } catch (err: any) {
-      toast.error(err.message || "Đăng ký thất bại")
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        toast.error(err.message || "Đăng ký thất bại")
+      } else {
+        toast.error("Đăng ký thất bại")
+      }
     }
   }
 

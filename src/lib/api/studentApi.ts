@@ -66,7 +66,7 @@ export async function countNotifications(): Promise<number> {
   }
 }
 
-export  async function fetchRecentActivities() {
+export async function fetchRecentActivities() {
   try {
     const { studentID } = await getUserData()
     const [scholarships, supports] = await Promise.all([
@@ -75,12 +75,12 @@ export  async function fetchRecentActivities() {
     ])
 
     const activities = [
-      ...scholarships.result.map((item: any) => ({
+      ...((scholarships.result || []) as Array<{ scholarship?: { name?: string }, createAt: string }>).map((item) => ({
         title: `Đăng ký học bổng ${item.scholarship?.name || ""}`,
         desc: "Hồ sơ đã được nộp thành công",
         time: new Date(item.createAt).toLocaleString("vi-VN")
       })),
-      ...supports.result.map((item: any) => ({
+      ...((supports.result || []) as Array<{ supportCode?: string, subject?: string, createAt: string }>).map((item) => ({
         title: `Yêu cầu hỗ trợ ${item.supportCode || ""}`,
         desc: item.subject || "Đã gửi yêu cầu hỗ trợ",
         time: new Date(item.createAt).toLocaleString("vi-VN")
@@ -88,7 +88,7 @@ export  async function fetchRecentActivities() {
     ]
 
     return activities.sort(
-      (a, b) => new Date(b.time).getTime() - new Date(a.time).getTime()
+      (a: { time: string }, b: { time: string }) => new Date(b.time).getTime() - new Date(a.time).getTime()
     )
   } catch (error) {
     console.error(error)
@@ -105,8 +105,8 @@ export async function fetchUpcomingEvents() {
     const now = new Date()
 
     return (data.result || [])
-      .filter((n: any) => n.event && new Date(n.event.startDate) > now)
-      .map((n: any) => ({
+      .filter((n: { event?: { startDate: string } }) => n.event && new Date(n.event.startDate) > now)
+      .map((n: { title: string, event: { startDate: string, location: string } }) => ({
         title: n.title,
         date: new Date(n.event.startDate).toLocaleDateString("vi-VN"),
         time: new Date(n.event.startDate).toLocaleTimeString("vi-VN", {
@@ -115,7 +115,10 @@ export async function fetchUpcomingEvents() {
         }),
         location: n.event.location,
       }))
-      .sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime())
+      .sort(
+        (a: { date: string }, b: { date: string }) =>
+          new Date(a.date).getTime() - new Date(b.date).getTime()
+      )
   } catch {
     return []
   }
@@ -142,8 +145,11 @@ export async function registerScholarship(scholarshipID: number) {
     }
 
     return data
-  } catch (error: any) {
-    throw new Error(error.message || "Có lỗi xảy ra khi đăng ký học bổng")
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new Error(error.message || "Có lỗi xảy ra khi đăng ký học bổng")
+    }
+    throw new Error("Có lỗi xảy ra khi đăng ký học bổng")
   }
 }
 
@@ -263,5 +269,3 @@ export async function fetchSupportResponses(): Promise<SupportItem[]> {
     throw error
   }
 }
-
-

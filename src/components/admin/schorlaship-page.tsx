@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
-import { EyeIcon, SlashIcon, ChevronsUpDownIcon, Settings } from "lucide-react"
+import {  SlashIcon, ChevronsUpDownIcon, Settings } from "lucide-react"
 
 import {
   Breadcrumb,
@@ -45,8 +45,12 @@ export function ScholarshipPage() {
       setLoading(true)
       const data = await fetchScholarshipRegistrations()
       setRegistrations(data)
-    } catch (err: any) {
-      setError(err.message)
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message)
+      } else {
+        setError("Lỗi khi tải danh sách.")
+      }
       toast.error("Lỗi khi tải danh sách.")
     } finally {
       setLoading(false)
@@ -58,7 +62,7 @@ export function ScholarshipPage() {
       await changeScholarshipStatus(registrationID, status)
       toast.success("Cập nhật trạng thái thành công")
       await loadScholarship()
-    } catch (err) {
+    } catch {
       toast.error("Không thể cập nhật trạng thái")
     }
   }

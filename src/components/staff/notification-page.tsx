@@ -1,21 +1,18 @@
 
 "use client"
 
-import { useEffect, useState, ChangeEvent } from "react"
+import { useEffect, useState } from "react"
 import { addNotification, fetchNotifications, AddNotification, NotificationItem, deleteNotification } from "@/lib/api/notificationApi"
 import { toast } from "sonner"
-import * as XLSX from "xlsx"
 
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
-import { SlashIcon, TrashIcon as DeleteIcon, ChevronsUpDownIcon, EyeIcon as ViewIcon, PencilIcon, EyeIcon, TrashIcon,
-   Server, CalendarDays, GraduationCap
+import { SlashIcon, ChevronsUpDownIcon, TrashIcon
  } from "lucide-react"
 
 import {
@@ -70,13 +67,18 @@ const [newNotification, setNewNotification] = useState<AddNotification>({
       setLoading(true)
       const data = await fetchNotifications()
       setNotice(data)
-    } catch (err: any) {
-      setError(err.message)
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message)
+      } else {
+        setError("Lỗi khi tải thông báo.")
+      }
       toast.error("Lỗi khi tải thông báo.")
     } finally {
       setLoading(false)
-      }
     }
+  }
+
   const handleAddNotice = async () => {
     if (!newNotification.posts[0].title.trim() || !newNotification.posts[0].content.trim()) {
       toast.error("Vui lòng nhập đầy đủ thông tin")
@@ -98,23 +100,31 @@ const [newNotification, setNewNotification] = useState<AddNotification>({
             event: undefined,
           }
         ],
-      });
-    } catch (err: any) {
-      toast.error(err.message || "Thêm thông báo thất bại.")
-    }finally{
+      })
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        toast.error(err.message || "Thêm thông báo thất bại.")
+      } else {
+        toast.error("Thêm thông báo thất bại.")
+      }
+    } finally {
       setLoading(false)
     }
-      }
-    const handleDelete = async (id: string) => {
-      try {
-        await deleteNotification([id])
-        setNotice(notices.filter((u) => u.notificationID !== id))
+  }
 
-        toast.success(`Đã xoá thông báo có id: ${id}`)
-      } catch (err: any) {
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteNotification([id])
+      setNotice(notices.filter((u) => u.notificationID !== id))
+      toast.success(`Đã xoá thông báo có id: ${id}`)
+    } catch (err: unknown) {
+      if (err instanceof Error) {
         toast.error(err.message || "Xoá thông báo thất bại.")
+      } else {
+        toast.error("Xoá thông báo thất bại.")
       }
     }
+  }
 
     const filteredNotice = notices.filter((notice) => {
     const matchesSearch =

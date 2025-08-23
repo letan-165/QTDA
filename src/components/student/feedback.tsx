@@ -47,8 +47,8 @@ export function SupportFeedbackPage() {
       setError("")
       const data = await fetchSupportResponses()
       setFeedbacks(data)
-    } catch (err: any) {
-      setError(err.message || "Không thể tải phản hồi hỗ trợ")
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Không thể tải phản hồi hỗ trợ")
       toast.error("Lỗi khi tải phản hồi hỗ trợ.")
     } finally {
       setLoading(false)
