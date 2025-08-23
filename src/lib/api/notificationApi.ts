@@ -1,3 +1,4 @@
+import { API_BASE } from "./index"
 export type NotificationItem = {
   title: string
   content: string
@@ -23,13 +24,13 @@ export type AddNotification = {
 }
 
 export async function fetchNotifications(): Promise<NotificationItem[]> {
-  const res = await fetch("http://localhost:8080/api/post/public/gets/notifications")
+  const res = await fetch(`${API_BASE}/api/post/public/gets/notifications`)
   if (!res.ok) throw new Error("Không thể tải danh sách thông báo")
   return (await res.json()).result
 }
 
 export async function addNotification(notification: AddNotification) {
-  const res = await fetch("http://localhost:8080/api/post/public/saves", {
+  const res = await fetch(`${API_BASE}/api/post/public/saves`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(notification),
@@ -39,7 +40,7 @@ export async function addNotification(notification: AddNotification) {
 }
 
 export async function deleteNotification(notificationIDs: string[]) {
-  const res = await fetch("http://localhost:8080/api/post/public/removes", {
+  const res = await fetch(`${API_BASE}/api/post/public/removes`, {
     method: "DELETE",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ notificationIDs }),

@@ -1,3 +1,4 @@
+import { API_BASE } from "./index" 
 export type ScholarshipRegistration = {
   registrationID: number
   student: { 
@@ -14,13 +15,13 @@ export type ScholarshipRegistration = {
 }
 
 export async function fetchScholarshipRegistrations(): Promise<ScholarshipRegistration[]> {
-  const res = await fetch("http://localhost:8080/api/registration/public/gets")
+  const res = await fetch(`${API_BASE}/api/registration/public/gets`)
   if (!res.ok) throw new Error("Không thể tải danh sách đăng ký học bổng")
   return (await res.json()).result
 }
 
 export async function changeScholarshipStatus(registrationID: number, status: "PENDING" | "APPROVED" | "REJECTED") {
-  const res = await fetch(`http://localhost:8080/api/registration/public/status/${registrationID}`, {
+  const res = await fetch(`${API_BASE}/api/registration/public/status/${registrationID}`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ status }),

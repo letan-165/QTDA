@@ -1,3 +1,4 @@
+import { API_BASE } from "./index"
 import Cookies from "js-cookie"
 export type UserResponse = {
   userID: string
@@ -28,13 +29,13 @@ export type UserDetail = {
 }
 
 export async function fetchAllUsers(): Promise<UserResponse[]> {
-  const res = await fetch("http://localhost:8080/api/user/public/gets")
+  const res = await fetch(`${API_BASE}/api/user/public/gets`)
   if (!res.ok) throw new Error("Không thể tải danh sách người dùng")
   return (await res.json()).result
 }
 
 export async function signUpUsers(users: NewUser[]) {
-  const res = await fetch("http://localhost:8080/api/user/public/saves", {
+  const res = await fetch(`${API_BASE}/api/user/public/saves`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ users }),
@@ -46,7 +47,7 @@ export async function signUpUsers(users: NewUser[]) {
 
 
 export async function updateUser(users: NewUser[]) {
-  const res = await fetch("http://localhost:8080/api/user/public/saves", {
+  const res = await fetch(`${API_BASE}/api/user/public/saves`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ users }),
@@ -58,7 +59,7 @@ export async function updateUser(users: NewUser[]) {
 
 
 export async function deleteUsers(userIDs: string[]) {
-  const res = await fetch("http://localhost:8080/api/user/public/removes", {
+  const res = await fetch(`${API_BASE}/api/user/public/removes`, {
     method: "DELETE",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ userIDs }),
@@ -68,7 +69,7 @@ export async function deleteUsers(userIDs: string[]) {
 }
 
 export async function fetchUserDetail(userID: string): Promise<UserDetail> {
-  const res = await fetch(`http://localhost:8080/api/user/public/get/${userID}`)
+  const res = await fetch(`${API_BASE}/api/user/public/get/${userID}`)
   if (!res.ok) throw new Error("Không thể tải thông tin người dùng")
   return (await res.json()).result
 }
@@ -77,7 +78,7 @@ export async function getUserData() {
   const userID = Cookies.get("userId")
   if (!userID) throw new Error("Không tìm thấy userID trong cookie")
 
-  const res = await fetch(`http://localhost:8080/api/user/public/get/${userID}`)
+  const res = await fetch(`${API_BASE}/api/user/public/get/${userID}`)
   if (!res.ok) throw new Error("Không thể tải thông tin người dùng")
 
   return (await res.json()).result?.student || {}

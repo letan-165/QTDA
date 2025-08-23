@@ -1,6 +1,9 @@
 import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import {API_BASE} from "./index"
+
+
 
 type DecodedToken = {
   sub: string;
@@ -63,7 +66,7 @@ export async function loginApi(
   password: string,
   router: AppRouterInstance
 ): Promise<void> {
-  const res = await fetch("http://localhost:8080/api/auth/public/login", {
+  const res = await fetch(`${API_BASE}/api/auth/public/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username, password }),
@@ -84,7 +87,7 @@ export async function sendResetPasswordApi(data: {
   password: string
   otp: number
 }): Promise<void> {
-  const res = await fetch("http://localhost:8080/api/auth/public/forgot", {
+  const res = await fetch(`${API_BASE}/api/auth/public/forgot`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
@@ -99,7 +102,7 @@ export async function sendResetPasswordApi(data: {
 export async function sendOTP(
   email: string
 ): Promise<void> {
-  const res = await fetch("http://localhost:8080/api/otp/public", {
+  const res = await fetch(`${API_BASE}api/otp/public`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email}),
