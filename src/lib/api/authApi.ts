@@ -23,16 +23,13 @@ export function handleLogin(accessToken: string, router: AppRouterInstance) {
   const role = decoded.scope;
   const userId = decoded.sub;
 
-  const expiresDate = new Date(decoded.exp * 1000);
 
   Cookies.set("access_token", accessToken, {
-    expires: expiresDate,
     secure: true,
     sameSite: "Strict",
   });
 
   Cookies.set("userId", userId, {
-    expires: expiresDate,
     secure: true,
     sameSite: "Strict",
   });
