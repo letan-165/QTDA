@@ -38,7 +38,7 @@ public class ResponseService {
         Support support = supportRepository.findById(request.getSupportID())
                 .orElseThrow(()-> new AppException(ErrorCode.SUPPORT_NO_EXISTS));
 
-        if (!support.getStatus().equals(SupportStatus.APPROVED))
+        if (!support.getStatus().equals(SupportStatus.COMPLETED))
             throw new AppException(ErrorCode.SUPPORT_NO_APPROVED);
 
         Response response = responseMapper.toResponse(request);
