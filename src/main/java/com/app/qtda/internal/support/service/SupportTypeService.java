@@ -40,7 +40,7 @@ public class SupportTypeService {
 
     public void delete(SupportTypeDeletesRequest request) {
         for (Long id :request.getSupportTypeIDs()){
-            if(supportTypeRepository.existsById(id))
+            if(!supportTypeRepository.existsById(id))
                 throw new AppException(ErrorCode.SUPPORT_TYPE_NO_EXISTS);
         }
         supportTypeRepository.deleteAllById(request.getSupportTypeIDs());
