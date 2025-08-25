@@ -254,7 +254,7 @@ const renderSheet = () => (
             </DropdownMenu>
             <DropdownMenu>
               <DropdownMenuTrigger className="border px-3 py-2 rounded w-full sm:w-auto text-left flex items-center justify-between gap-2">
-                {filterSupportType === "All" ? "Tất cả loại hỗ trợ" : supportTypes.find((st) => st.supportTypeID === Number(filterSupportType))?.name || "Tất cả"}
+                {filterSupportType === "All" ? "Tất cả loại hỗ trợ" : supportTypes.find((st) => st.supportTypeID === String(filterSupportType))?.name || "Tất cả"}
                 <ChevronsUpDownIcon className="w-4 h-4 opacity-50" />
               </DropdownMenuTrigger>
               <DropdownMenuContent>
@@ -262,7 +262,7 @@ const renderSheet = () => (
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => setFilterSupportType("All")}>Tất cả</DropdownMenuItem>
                 {supportTypes.map((st) => (
-                  <DropdownMenuItem key={st.supportTypeID} onClick={() => setFilterSupportType(st.supportTypeID.toString())}>
+                  <DropdownMenuItem key={st.supportTypeID} onClick={() => setFilterSupportType(st.supportTypeID)}>
                     {st.name}
                   </DropdownMenuItem>
                 ))}

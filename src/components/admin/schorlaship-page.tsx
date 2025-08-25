@@ -177,6 +177,10 @@ export function ScholarshipPage() {
                   {registration.status === "REJECTED" && (
                     <span className="bg-red-100 text-red-800 px-2 py-1 rounded text-xs">Từ chối</span>
                   )}
+                  {registration.status === "EXPIRED" && (
+                    <span className="bg-gray-100 text-gray-800 px-2 py-1 rounded text-xs">Quá hạn</span>
+                  )}
+                  
                 </td>
                 <td className="p-4 text-center">
                   <DropdownMenu>

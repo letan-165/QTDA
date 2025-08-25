@@ -81,3 +81,18 @@ export async function changeResponseStatus(supportID: number, status: "PENDING" 
   if (!res.ok) throw new Error("Không thể thay đổi trạng thái")
   return (await res.json()).result
 }
+
+export async function deleteSupportType(supportTypeIDs: string[]) {
+  const res = await fetch(`${API_BASE}/api/supportType/public/removes`, {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ supportTypeIDs}), 
+  })
+
+  if (!res.ok) {
+    const errMsg = await res.text()
+    throw new Error(`Xóa danh mục thất bại: ${errMsg}`)
+  }
+
+  return (await res.json()).result
+}

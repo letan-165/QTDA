@@ -128,7 +128,7 @@ export async function fetchScholarshipRegistrationsByStudent(): Promise<Scholars
 }
 
 export type TypeReponse = {
-  supportTypeID: number
+  supportTypeID: string
   name: string
   description: string
 }

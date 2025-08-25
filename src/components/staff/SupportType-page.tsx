@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { SlashIcon } from "lucide-react"
+import { SlashIcon, TrashIcon } from "lucide-react"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -17,7 +17,8 @@ import { toast } from "sonner"
 
 import {
   SupportType, 
-  addSupportType
+  addSupportType,
+  deleteSupportType
 } from "@/lib/api/staffApi"
 
 import { fetchSupportType, TypeReponse } from "@/lib/api/studentApi"
@@ -41,13 +42,17 @@ export function SupportTypePage() {
       setLoading(true)
       const supportTypes = await fetchSupportType()
       setSupportCategories(supportTypes)
-    } catch (err) {
-      console.error(err)
-      toast.error("Lỗi khi tải danh mục hỗ trợ")
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        toast.error(err.message || "Lỗi khi tải danh mục hỗ trợ")
+      } else {
+        toast.error("Lỗi khi tải danh mục hỗ trợ")
+      }
     } finally {
       setLoading(false)
     }
   }
+
 
   const handleAddSupportType = async () => {
     if (!form.name || !form.description) {
@@ -57,17 +62,35 @@ export function SupportTypePage() {
 
     try {
       setSubmitting(true)
-      await addSupportType([form]) 
+      await addSupportType([form])
       toast.success("Thêm danh mục hỗ trợ thành công")
       setForm({ name: "", description: "" })
       await loadData()
-    } catch (error) {
-      console.error(error)
-      toast.error("Thêm danh mục hỗ trợ thất bại")
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        toast.error(err.message || "Thêm danh mục hỗ trợ thất bại.")
+      } else {
+        toast.error("Thêm danh mục hỗ trợ thất bại.")
+      }
     } finally {
       setSubmitting(false)
     }
   }
+
+
+    const handleDelete = async (id: string) => {
+      try {
+        await deleteSupportType([id])
+        toast.success(`Đã xoá thông báo có id: ${id}`)
+        await loadData()
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          toast.error(err.message || "Xoá thông báo thất bại.")
+        } else {
+          toast.error("Xoá thông báo thất bại.")
+        }
+      }
+    }
   const renderSupportType = () =>(
 
             <div className="space-y-3 border rounded-lg p-4 shadow-sm bg-white">
@@ -75,7 +98,7 @@ export function SupportTypePage() {
           <ScrollArea className="h-[500px] pr-3">
             {loading ? (
               <div className="flex flex-col gap-4">
-                {[...Array(5)].map((_, idx) => (
+                {[...Array(6)].map((_, idx) => (
                   <div key={idx} className="border rounded-lg p-4 shadow animate-pulse space-y-2">
                     <Skeleton className="h-4 bg-gray-200 rounded w-1/2" />
                     <Skeleton className="h-3 bg-gray-200 rounded w-3/4" />
@@ -86,13 +109,22 @@ export function SupportTypePage() {
               supportCategories.map((cat) => (
                 <div
                   key={cat.supportTypeID}
-                  className="border rounded-lg p-4 bg-gray-50"
+                  className="relative border rounded-lg p-4 bg-gray-50"
                 >
                   <div className="font-medium">{cat.name}</div>
                   <div className="text-sm text-gray-500">{cat.description}</div>
+
+                  <button
+                    onClick={() => handleDelete(cat.supportTypeID)}
+                    className="absolute top-2 right-2 p-1 rounded-full hover:bg-red-100 transition"
+                  >
+                    <TrashIcon className="w-4 h-4 text-red-500" />
+                  </button>
                 </div>
               ))
             )}
+
+
           </ScrollArea>
         </div>
   )
